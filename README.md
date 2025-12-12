@@ -1,4 +1,4 @@
-# Storefront w/Nano Banana + AI SDK + AI Gateway
+# Storefront 
 
 *Automatically synced with your [v0.app](https://v0.app) deployments*
 
