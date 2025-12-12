@@ -5,11 +5,11 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'POSBOK Storefront',
+  description: 'Your local marketplace for quality products',
   icons: {
-    icon: '/icon.svg',
+    icon: '/logo-mini.png',
+    apple: '/logo-mini.png',
   },
 }
 

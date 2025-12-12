@@ -1,0 +1,535 @@
+{
+  "info": {
+    "name": "PosBook - Storefront Enhancements API",
+    "description": "Complete API collection for Product Reviews, Shopping Cart, Analytics, and Image Upload features",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "storefront-enhancements-v1"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "storeSlug",
+      "value": "development-business-inc",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "unique-session-123",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "6",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Product Reviews",
+      "description": "Product reviews and ratings endpoints",
+      "item": [
+        {
+          "name": "Public - Submit Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_name\": \"John Doe\",\n  \"customer_email\": \"john@example.com\",\n  \"rating\": 5,\n  \"review_title\": \"Great product!\",\n  \"review_text\": \"This product exceeded my expectations. Highly recommended!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews/products/{{productId}}/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "products", "{{productId}}", "reviews"]
+            },
+            "description": "Submit a review for a product (no authentication required)"
+          }
+        },
+        {
+          "name": "Public - Get Product Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reviews/products/{{productId}}/reviews?page=1&limit=20&sortBy=recent",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "products", "{{productId}}", "reviews"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"},
+                {"key": "sortBy", "value": "recent", "description": "Options: recent, helpful, rating_high, rating_low"},
+                {"key": "rating", "value": "5", "disabled": true, "description": "Filter by specific rating"}
+              ]
+            },
+            "description": "Get all approved reviews for a product"
+          }
+        },
+        {
+          "name": "Public - Mark Review as Helpful",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reviews/reviews/1/helpful",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "reviews", "1", "helpful"]
+            },
+            "description": "Increment the helpful count for a review"
+          }
+        },
+        {
+          "name": "Admin - Get Pending Reviews",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reviews/pending?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "pending"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            },
+            "description": "Get all pending reviews awaiting approval"
+          }
+        },
+        {
+          "name": "Admin - Get All Business Reviews",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reviews/all?status=all&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "all"],
+              "query": [
+                {"key": "status", "value": "all", "description": "Options: approved, pending, all"},
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            },
+            "description": "Get all reviews for the business"
+          }
+        },
+        {
+          "name": "Admin - Moderate Review (Approve)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_approved\": true,\n  \"admin_response\": \"Thank you for your feedback! We're glad you enjoyed the product.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews/1/moderate",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "1", "moderate"]
+            },
+            "description": "Approve a review and optionally add admin response"
+          }
+        },
+        {
+          "name": "Admin - Moderate Review (Reject)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_approved\": false,\n  \"admin_response\": \"This review violates our community guidelines.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews/1/moderate",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "1", "moderate"]
+            },
+            "description": "Reject a review with admin note"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shopping Cart",
+      "description": "Session-based shopping cart endpoints (no authentication required)",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-session-id",
+                "value": "{{sessionId}}",
+                "description": "Unique session ID for cart tracking"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{storeSlug}}/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{storeSlug}}", "cart"]
+            },
+            "description": "Get the current shopping cart for this session"
+          }
+        },
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-session-id",
+                "value": "{{sessionId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 6,\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{storeSlug}}/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{storeSlug}}", "cart", "add"]
+            },
+            "description": "Add a product to the cart"
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "x-session-id",
+                "value": "{{sessionId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{storeSlug}}/cart/items/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{storeSlug}}", "cart", "items", "1"]
+            },
+            "description": "Update quantity of an item (set to 0 to remove)"
+          }
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-session-id",
+                "value": "{{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{storeSlug}}/cart/items/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{storeSlug}}", "cart", "items", "1"]
+            },
+            "description": "Remove a specific item from the cart"
+          }
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-session-id",
+                "value": "{{sessionId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{storeSlug}}/cart/clear",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{storeSlug}}", "cart", "clear"]
+            },
+            "description": "Remove all items from the cart"
+          }
+        },
+        {
+          "name": "Update Cart Contact Info",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "x-session-id",
+                "value": "{{sessionId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_email\": \"customer@example.com\",\n  \"customer_phone\": \"08012345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{storeSlug}}/cart/contact",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{storeSlug}}", "cart", "contact"]
+            },
+            "description": "Add customer contact information to the cart"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "description": "Storefront analytics endpoints (admin only)",
+      "item": [
+        {
+          "name": "Dashboard Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/dashboard?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "dashboard"],
+              "query": [
+                {"key": "days", "value": "30", "description": "Number of days to include"}
+              ]
+            },
+            "description": "Get comprehensive dashboard analytics"
+          }
+        },
+        {
+          "name": "Top Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/top-products?days=30&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "top-products"],
+              "query": [
+                {"key": "days", "value": "30"},
+                {"key": "limit", "value": "10"}
+              ]
+            },
+            "description": "Get top performing products by views and sales"
+          }
+        },
+        {
+          "name": "Search Trends",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/search-trends?days=30&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "search-trends"],
+              "query": [
+                {"key": "days", "value": "30"},
+                {"key": "limit", "value": "20"}
+              ]
+            },
+            "description": "Get popular search queries"
+          }
+        },
+        {
+          "name": "Traffic Sources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/traffic-sources?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "traffic-sources"],
+              "query": [
+                {"key": "days", "value": "30"}
+              ]
+            },
+            "description": "Get traffic source breakdown"
+          }
+        },
+        {
+          "name": "Daily Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/daily?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "daily"],
+              "query": [
+                {"key": "days", "value": "30"}
+              ]
+            },
+            "description": "Get day-by-day analytics for charts"
+          }
+        },
+        {
+          "name": "Purchase Request Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/purchase-requests?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "purchase-requests"],
+              "query": [
+                {"key": "days", "value": "30"}
+              ]
+            },
+            "description": "Get analytics about purchase requests"
+          }
+        },
+        {
+          "name": "Product Performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/analytics/products/{{productId}}/performance?days=30",
+              "host": ["{{baseUrl}}"],
+              "path": ["analytics", "products", "{{productId}}", "performance"],
+              "query": [
+                {"key": "days", "value": "30"}
+              ]
+            },
+            "description": "Get detailed performance analytics for a specific product"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Image Upload",
+      "description": "Image upload endpoints (admin only)",
+      "item": [
+        {
+          "name": "Upload Storefront Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "business_logo",
+                  "type": "file",
+                  "src": [],
+                  "description": "Business logo (max 5MB)"
+                },
+                {
+                  "key": "store_front_image",
+                  "type": "file",
+                  "src": [],
+                  "description": "Store front photo (max 5MB)"
+                },
+                {
+                  "key": "sign_board_image",
+                  "type": "file",
+                  "src": [],
+                  "description": "Sign board photo (max 5MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/storefront/upload-images",
+              "host": ["{{baseUrl}}"],
+              "path": ["storefront", "upload-images"]
+            },
+            "description": "Upload storefront images (logo, store front, sign board)"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -4,25 +4,32 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* POSBOK Brand Colors */
+  --posbok-green: #6B9B37;
+  --posbok-green-light: #8BC34A;
+  --posbok-green-dark: #4A7A1A;
+  --posbok-cream: #F5F5DC;
+  --posbok-cream-light: #FAFAF0;
+
+  --background: oklch(0.98 0.01 120);
+  --foreground: oklch(0.2 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.55 0.15 130);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.97 0.01 90);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --accent: oklch(0.65 0.15 130);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: oklch(0.9 0.02 130);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.55 0.15 130);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -31,12 +38,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.55 0.15 130);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.55 0.15 130);
 }
 
 .dark {
@@ -113,6 +120,13 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* POSBOK Custom Colors */
+  --color-posbok-green: #6B9B37;
+  --color-posbok-green-light: #8BC34A;
+  --color-posbok-green-dark: #4A7A1A;
+  --color-posbok-cream: #F5F5DC;
+  --color-posbok-cream-light: #FAFAF0;
 }
 
 @layer base {
@@ -124,20 +138,60 @@
   }
 }
 
-/* Adding explicit button styling to fix contrast issue */
-.add-button {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border: none !important;
-  outline: none !important;
-  padding: 8px 24px !important;
+/* Star Rating Styles */
+.star-rating {
+  display: inline-flex;
+  gap: 2px;
 }
 
-.add-button:hover {
-  opacity: 0.8 !important;
+.star {
+  color: #6B9B37;
 }
 
-/* Adding smooth loading animations */
+.star-empty {
+  color: #D4D4D4;
+}
+
+/* Product Card Hover Effects */
+.product-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(107, 155, 55, 0.15);
+}
+
+/* Delivery Badge Styles */
+.badge-available {
+  background-color: #6B9B37;
+  color: white;
+}
+
+.badge-unavailable {
+  background-color: #666666;
+  color: white;
+}
+
+/* Search Bar Focus */
+.search-input:focus {
+  border-color: #6B9B37;
+  box-shadow: 0 0 0 3px rgba(107, 155, 55, 0.1);
+}
+
+/* Filter Dropdown Styles */
+.filter-dropdown {
+  border: 1px solid #E5E5E5;
+  border-radius: 25px;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+}
+
+.filter-dropdown:hover {
+  border-color: #6B9B37;
+}
+
+/* Smooth loading animations */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -158,28 +212,6 @@
   }
 }
 
-@keyframes slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .animate-fade-in {
   animation: fade-in 0.6s ease-out forwards;
 }
@@ -189,42 +221,7 @@
   opacity: 0;
 }
 
-.animate-slide-down {
-  animation: slide-down 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.5s ease-out forwards;
-  opacity: 0;
-}
-
-/* Enhanced staggered animations for product grid */
-.stagger-animation {
-  opacity: 0;
-  animation: slide-up 0.8s ease-out forwards;
-}
-
-.stagger-1 {
-  animation-delay: 0.1s;
-}
-.stagger-2 {
-  animation-delay: 0.2s;
-}
-.stagger-3 {
-  animation-delay: 0.3s;
-}
-.stagger-4 {
-  animation-delay: 0.4s;
-}
-
-/* Smooth image loading transitions */
-.image-loading {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
+/* Image loading shimmer */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -232,4 +229,10 @@
   100% {
     background-position: 200% 0;
   }
+}
+
+.image-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
