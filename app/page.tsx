@@ -85,7 +85,6 @@ export default function StorefrontPage() {
   const [searchQuery, setSearchQuery] = useState("Wireless Mouse")
   const [selectedLocation, setSelectedLocation] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("")
-  const [cartCount] = useState(3)
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
@@ -95,7 +94,7 @@ export default function StorefrontPage() {
   return (
     <div className="min-h-screen bg-[#FAFAF0] flex flex-col">
       {/* Header */}
-      <Header cartCount={cartCount} />
+      <Header />
 
       {/* Main Content */}
       <main className="flex-grow max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
