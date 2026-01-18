@@ -8,7 +8,7 @@ import { storeApi, Store, Product, ProductsResponse, Category } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
 import { SearchBar } from "@/components/SearchBar"
 import { Footer } from "@/components/Footer"
-import { ShoppingCart, LogIn, Menu, X, MapPin, Loader2, ChevronDown } from "lucide-react"
+import { ShoppingCart, Menu, X, MapPin, Loader2, ChevronDown } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -22,20 +22,14 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <Link href={`/${storeSlug}`} className="flex items-center">
-            {store?.business_logo ? (
-              <Image
-                src={store.business_logo}
-                alt={businessName}
-                width={150}
-                height={50}
-                className="h-10 sm:h-12 w-auto"
-                priority
-              />
-            ) : (
-              <span className="text-xl sm:text-2xl font-bold text-[#6B9B37]">
-                {businessName}
-              </span>
-            )}
+            <Image
+              src={store?.business_logo || "/logo-2.png"}
+              alt={businessName}
+              width={150}
+              height={50}
+              className="h-10 sm:h-12 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -71,11 +65,6 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
                 </span>
               )}
             </Link>
-
-            {/* Login */}
-            <button className="p-2 text-[#6B9B37] hover:text-[#4A7A1A] transition-colors">
-              <LogIn className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />
-            </button>
 
             {/* Mobile Menu Button */}
             <button

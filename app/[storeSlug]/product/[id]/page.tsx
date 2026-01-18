@@ -9,7 +9,7 @@ import { useCart } from "@/contexts/CartContext"
 import { useReviews } from "@/hooks/useReviews"
 import { SubmitReviewData } from "@/lib/api"
 import { Footer } from "@/components/Footer"
-import { Star, Truck, Shield, ChevronLeft, Minus, Plus, ShoppingCart, Heart, Share2, MapPin, ThumbsUp, Loader2, CheckCircle, LogIn, Menu, X } from "lucide-react"
+import { Star, Truck, Shield, ChevronLeft, Minus, Plus, ShoppingCart, Heart, Share2, MapPin, ThumbsUp, Loader2, CheckCircle, Menu, X } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -22,20 +22,14 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           <Link href={`/${storeSlug}`} className="flex items-center">
-            {store?.business_logo ? (
-              <Image
-                src={store.business_logo}
-                alt={businessName}
-                width={150}
-                height={50}
-                className="h-10 sm:h-12 w-auto"
-                priority
-              />
-            ) : (
-              <span className="text-xl sm:text-2xl font-bold text-[#6B9B37]">
-                {businessName}
-              </span>
-            )}
+            <Image
+              src={store?.business_logo || "/logo-2.png"}
+              alt={businessName}
+              width={150}
+              height={50}
+              className="h-10 sm:h-12 w-auto"
+              priority
+            />
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
@@ -59,9 +53,6 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
                 </span>
               )}
             </Link>
-            <button className="p-2 text-[#6B9B37] hover:text-[#4A7A1A] transition-colors">
-              <LogIn className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />
-            </button>
             <button
               className="md:hidden p-2 text-gray-800 hover:text-[#6B9B37] transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
