@@ -240,6 +240,33 @@ export interface CategoriesApiResponse {
   data: Category[]
 }
 
+// Purchase Request types
+export interface PurchaseRequestItem {
+  product_id: number
+  quantity: number
+  price: number
+}
+
+export interface PurchaseRequestData {
+  customer_name: string
+  customer_email: string
+  customer_phone: string
+  customer_location: string
+  items: PurchaseRequestItem[]
+  message?: string
+}
+
+export interface PurchaseRequestResponse {
+  success: boolean
+  message: string
+  data?: {
+    id: number
+    reference_number: string
+    status: string
+    created_at: string
+  }
+}
+
 // API Error handling
 class ApiError extends Error {
   status: number
@@ -508,6 +535,23 @@ export const storeApi = {
     })
     const result = await handleResponse<CategoriesApiResponse>(response)
     return result.data
+  },
+
+  /**
+   * Submit a purchase request
+   */
+  async submitPurchaseRequest(
+    storeSlug: string,
+    data: PurchaseRequestData
+  ): Promise<PurchaseRequestResponse> {
+    const response = await fetch(`${API_BASE_URL}/storefront/public/${storeSlug}/purchase-request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    return handleResponse<PurchaseRequestResponse>(response)
   },
 }
 

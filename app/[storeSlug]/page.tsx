@@ -8,7 +8,7 @@ import { storeApi, Store, Product, ProductsResponse, Category } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
 import { SearchBar } from "@/components/SearchBar"
 import { StoreFooter } from "@/components/StoreFooter"
-import { ShoppingCart, Menu, X, MapPin, Loader2, ChevronDown } from "lucide-react"
+import { ShoppingCart, Menu, X, MapPin, Loader2, ChevronDown, SearchX, Package } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -381,6 +381,7 @@ export default function StorePage() {
             <div className="flex-grow">
               <SearchBar
                 placeholder="Search products..."
+                value={searchQuery}
                 onSearch={handleSearch}
               />
             </div>
@@ -404,8 +405,63 @@ export default function StorePage() {
             <Loader2 className="w-8 h-8 animate-spin text-[#6B9B37]" />
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">No products found.</p>
+          <div className="text-center py-12 sm:py-16 md:py-20">
+            <div className="max-w-md mx-auto">
+              {/* Icon */}
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                {searchQuery ? (
+                  <SearchX className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
+                ) : (
+                  <Package className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
+                )}
+              </div>
+
+              {/* Title */}
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
+                {searchQuery ? "No products found" : selectedCategoryId ? "No products in this category" : "No products available"}
+              </h2>
+
+              {/* Description */}
+              <p className="text-gray-600 mb-6">
+                {searchQuery ? (
+                  <>
+                    We couldn't find any products matching "<span className="font-medium text-gray-900">{searchQuery}</span>".
+                    Try a different search term or browse all products.
+                  </>
+                ) : selectedCategoryId ? (
+                  <>
+                    There are no products in the selected category yet.
+                    Try selecting a different category or browse all products.
+                  </>
+                ) : (
+                  <>
+                    This store doesn't have any products listed yet.
+                    Check back later for new arrivals.
+                  </>
+                )}
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                {(searchQuery || selectedCategoryId) && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery("")
+                      setSelectedCategoryId(null)
+                    }}
+                    className="inline-flex items-center justify-center px-6 py-3 bg-[#6B9B37] text-white font-medium rounded-lg hover:bg-[#4A7A1A] transition-colors"
+                  >
+                    View All Products
+                  </button>
+                )}
+                <Link
+                  href={`/${storeSlug}/contact`}
+                  className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Contact Store
+                </Link>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 lg:gap-6">

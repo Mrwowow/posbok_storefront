@@ -1,6 +1,16 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
+  "/[storeSlug]/cart/page": "app/[storeSlug]/cart/page.js",
   "/[storeSlug]/page": "app/[storeSlug]/page.js",
+  "/[storeSlug]/product/[id]/page": "app/[storeSlug]/product/[id]/page.js",
+  "/about/page": "app/about/page.js",
+  "/api/generate-image/route": "app/api/generate-image/route.js",
+  "/[storeSlug]/about/page": "app/[storeSlug]/about/page.js",
   "/[storeSlug]/contact/page": "app/[storeSlug]/contact/page.js",
-  "/[storeSlug]/about/page": "app/[storeSlug]/about/page.js"
+  "/contact/page": "app/contact/page.js",
+  "/api/generate-model-image/route": "app/api/generate-model-image/route.js",
+  "/cart/page": "app/cart/page.js",
+  "/page": "app/page.js",
+  "/services/page": "app/services/page.js",
+  "/product/[id]/page": "app/product/[id]/page.js"
 }

@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { storeApi, Store, Category } from "@/lib/api"
+import { storeApi, Store, Category, PurchaseRequestData } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
 import { StoreFooter } from "@/components/StoreFooter"
-import { Minus, Plus, Trash2, ShoppingBag, ChevronLeft, ArrowRight, Loader2, ShoppingCart, Menu, X } from "lucide-react"
+import { Minus, Plus, Trash2, ShoppingBag, ChevronLeft, ArrowRight, Loader2, ShoppingCart, Menu, X, CheckCircle, MapPin } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -82,6 +82,7 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
 
 export default function CartPage() {
   const params = useParams()
+  const router = useRouter()
   const storeSlug = params.storeSlug as string
 
   const [store, setStore] = useState<Store | null>(null)
@@ -103,6 +104,20 @@ export default function CartPage() {
   const [contactEmail, setContactEmail] = useState(cart?.customer_email || "")
   const [contactPhone, setContactPhone] = useState(cart?.customer_phone || "")
   const [isSavingContact, setIsSavingContact] = useState(false)
+
+  // Checkout form state
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [orderSuccess, setOrderSuccess] = useState(false)
+  const [orderReference, setOrderReference] = useState<string | null>(null)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [checkoutForm, setCheckoutForm] = useState({
+    customer_name: "",
+    customer_email: "",
+    customer_phone: "",
+    customer_location: "",
+    message: "",
+  })
 
   // Update cart context with current store slug
   useEffect(() => {
@@ -137,6 +152,16 @@ export default function CartPage() {
     }
   }, [cart])
 
+  // Auto-redirect to store after successful order
+  useEffect(() => {
+    if (orderSuccess) {
+      const timer = setTimeout(() => {
+        router.push(`/${storeSlug}`)
+      }, 5000) // Redirect after 5 seconds
+      return () => clearTimeout(timer)
+    }
+  }, [orderSuccess, router, storeSlug])
+
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -170,6 +195,53 @@ export default function CartPage() {
       // Error is handled in context
     } finally {
       setIsSavingContact(false)
+    }
+  }
+
+  const handleProceedToCheckout = () => {
+    // Pre-fill checkout form with cart contact info
+    setCheckoutForm(prev => ({
+      ...prev,
+      customer_email: contactEmail || cart?.customer_email || "",
+      customer_phone: contactPhone || cart?.customer_phone || "",
+    }))
+    setShowCheckoutForm(true)
+    setCheckoutError(null)
+  }
+
+  const handleSubmitPurchaseRequest = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setCheckoutError(null)
+
+    try {
+      const purchaseData: PurchaseRequestData = {
+        customer_name: checkoutForm.customer_name,
+        customer_email: checkoutForm.customer_email,
+        customer_phone: checkoutForm.customer_phone,
+        customer_location: checkoutForm.customer_location,
+        items: cartItems.map(item => ({
+          product_id: item.product_id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        message: checkoutForm.message || undefined,
+      }
+
+      const response = await storeApi.submitPurchaseRequest(storeSlug, purchaseData)
+
+      if (response.success) {
+        setOrderSuccess(true)
+        setOrderReference(response.data?.reference_number || null)
+        // Clear the cart after successful order
+        await clearCart()
+      } else {
+        setCheckoutError(response.message || "Failed to submit order. Please try again.")
+      }
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : "Failed to submit order. Please try again.")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -327,77 +399,244 @@ export default function CartPage() {
                 })}
               </div>
 
-              {/* Order Summary */}
+              {/* Order Summary / Checkout Form */}
               <div className="lg:col-span-1">
                 <div className="bg-white rounded-lg p-6 sticky top-24">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                    Order Summary
-                  </h2>
+                  {!showCheckoutForm ? (
+                    <>
+                      <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                        Order Summary
+                      </h2>
 
-                  <div className="space-y-3 mb-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">
-                        Subtotal ({itemCount} items)
-                      </span>
-                      <span className="font-medium">{formatPrice(subtotal)}</span>
-                    </div>
-                  </div>
+                      <div className="space-y-3 mb-4">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">
+                            Subtotal ({itemCount} items)
+                          </span>
+                          <span className="font-medium">{formatPrice(subtotal)}</span>
+                        </div>
+                      </div>
 
-                  <div className="border-t border-gray-200 pt-4 mb-6">
-                    <div className="flex justify-between">
-                      <span className="font-semibold text-gray-900">Total</span>
-                      <span className="text-xl font-bold text-gray-900">
-                        {formatPrice(total)}
-                      </span>
-                    </div>
-                  </div>
+                      <div className="border-t border-gray-200 pt-4 mb-6">
+                        <div className="flex justify-between">
+                          <span className="font-semibold text-gray-900">Total</span>
+                          <span className="text-xl font-bold text-gray-900">
+                            {formatPrice(total)}
+                          </span>
+                        </div>
+                      </div>
 
-                  {/* Contact Information */}
-                  <div className="border-t border-gray-200 pt-4 mb-6">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Contact Information</h3>
-                    <div className="space-y-3">
-                      <input
-                        type="email"
-                        placeholder="Email address"
-                        value={contactEmail}
-                        onChange={(e) => setContactEmail(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
-                      />
-                      <input
-                        type="tel"
-                        placeholder="Phone number"
-                        value={contactPhone}
-                        onChange={(e) => setContactPhone(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
-                      />
+                      {/* Contact Information */}
+                      <div className="border-t border-gray-200 pt-4 mb-6">
+                        <h3 className="text-sm font-semibold text-gray-900 mb-3">Contact Information</h3>
+                        <div className="space-y-3">
+                          <input
+                            type="email"
+                            placeholder="Email address"
+                            value={contactEmail}
+                            onChange={(e) => setContactEmail(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
+                          />
+                          <input
+                            type="tel"
+                            placeholder="Phone number"
+                            value={contactPhone}
+                            onChange={(e) => setContactPhone(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
+                          />
+                          <button
+                            onClick={handleSaveContact}
+                            disabled={isSavingContact}
+                            className="w-full px-3 py-2 text-sm text-[#6B9B37] border border-[#6B9B37] rounded-lg hover:bg-[#6B9B37] hover:text-white transition-colors disabled:opacity-50"
+                          >
+                            {isSavingContact ? "Saving..." : "Save Contact Info"}
+                          </button>
+                        </div>
+                      </div>
+
                       <button
-                        onClick={handleSaveContact}
-                        disabled={isSavingContact}
-                        className="w-full px-3 py-2 text-sm text-[#6B9B37] border border-[#6B9B37] rounded-lg hover:bg-[#6B9B37] hover:text-white transition-colors disabled:opacity-50"
+                        onClick={handleProceedToCheckout}
+                        disabled={isLoading || cartItems.length === 0}
+                        className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#6B9B37] text-white font-medium rounded-lg hover:bg-[#4A7A1A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isSavingContact ? "Saving..." : "Save Contact Info"}
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            Proceed to Checkout
+                            <ArrowRight className="w-4 h-4" />
+                          </>
+                        )}
                       </button>
-                    </div>
-                  </div>
 
-                  <button
-                    disabled={isLoading || cartItems.length === 0}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#6B9B37] text-white font-medium rounded-lg hover:bg-[#4A7A1A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        Proceed to Checkout
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
+                      <p className="text-xs text-gray-500 text-center mt-4">
+                        Secure checkout powered by POSbok
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      {/* Checkout Form */}
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900">
+                          Checkout
+                        </h2>
+                        <button
+                          onClick={() => setShowCheckoutForm(false)}
+                          className="text-sm text-gray-600 hover:text-[#6B9B37] transition-colors"
+                        >
+                          ← Back to cart
+                        </button>
+                      </div>
 
-                  <p className="text-xs text-gray-500 text-center mt-4">
-                    Secure checkout powered by POSbok
-                  </p>
+                      {/* Order Total Summary */}
+                      <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">{itemCount} items</span>
+                          <span className="text-lg font-bold text-gray-900">{formatPrice(total)}</span>
+                        </div>
+                      </div>
+
+                      {checkoutError && (
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                          {checkoutError}
+                        </div>
+                      )}
+
+                      <form onSubmit={handleSubmitPurchaseRequest} className="space-y-4">
+                        <div>
+                          <label htmlFor="customer_name" className="block text-sm font-medium text-gray-700 mb-1">
+                            Full Name *
+                          </label>
+                          <input
+                            type="text"
+                            id="customer_name"
+                            required
+                            value={checkoutForm.customer_name}
+                            onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_name: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
+                            placeholder="Enter your full name"
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="customer_email" className="block text-sm font-medium text-gray-700 mb-1">
+                            Email Address *
+                          </label>
+                          <input
+                            type="email"
+                            id="customer_email"
+                            required
+                            value={checkoutForm.customer_email}
+                            onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_email: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
+                            placeholder="your@email.com"
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="customer_phone" className="block text-sm font-medium text-gray-700 mb-1">
+                            Phone Number *
+                          </label>
+                          <input
+                            type="tel"
+                            id="customer_phone"
+                            required
+                            value={checkoutForm.customer_phone}
+                            onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_phone: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
+                            placeholder="+234 XXX XXX XXXX"
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="customer_location" className="block text-sm font-medium text-gray-700 mb-1">
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-4 h-4" />
+                              Delivery Location *
+                            </span>
+                          </label>
+                          <input
+                            type="text"
+                            id="customer_location"
+                            required
+                            value={checkoutForm.customer_location}
+                            onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_location: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent"
+                            placeholder="Enter your delivery address"
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                            Additional Notes (Optional)
+                          </label>
+                          <textarea
+                            id="message"
+                            rows={3}
+                            value={checkoutForm.message}
+                            onChange={(e) => setCheckoutForm(prev => ({ ...prev, message: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent resize-none"
+                            placeholder="Any special instructions for your order..."
+                          />
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#6B9B37] text-white font-medium rounded-lg hover:bg-[#4A7A1A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              Submitting Order...
+                            </>
+                          ) : (
+                            <>
+                              Submit Purchase Request
+                              <ArrowRight className="w-4 h-4" />
+                            </>
+                          )}
+                        </button>
+
+                        <p className="text-xs text-gray-500 text-center">
+                          By submitting, you agree to be contacted by the seller
+                        </p>
+                      </form>
+                    </>
+                  )}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Order Success Modal */}
+          {orderSuccess && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg p-6 sm:p-8 max-w-md w-full text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-500" />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                  Order Submitted!
+                </h2>
+                <p className="text-gray-600 mb-4">
+                  Your purchase request has been sent to the seller. They will contact you shortly to confirm your order.
+                </p>
+                {orderReference && (
+                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-gray-600">Reference Number</p>
+                    <p className="text-lg font-semibold text-gray-900">{orderReference}</p>
+                  </div>
+                )}
+                <button
+                  onClick={() => router.push(`/${storeSlug}`)}
+                  className="inline-flex items-center justify-center px-6 py-3 bg-[#6B9B37] text-white font-medium rounded-lg hover:bg-[#4A7A1A] transition-colors w-full"
+                >
+                  Continue Shopping
+                </button>
+                <p className="text-xs text-gray-500 mt-3">
+                  Redirecting to store in a few seconds...
+                </p>
               </div>
             </div>
           )}
