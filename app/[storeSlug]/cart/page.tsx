@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { storeApi, Store } from "@/lib/api"
+import { storeApi, Store, Category } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
-import { Footer } from "@/components/Footer"
+import { StoreFooter } from "@/components/StoreFooter"
 import { Minus, Plus, Trash2, ShoppingBag, ChevronLeft, ArrowRight, Loader2, ShoppingCart, Menu, X } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
@@ -32,13 +32,13 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
 
           <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
             <Link href={`/${storeSlug}`} className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors">
-              Products
+              Home
             </Link>
             <Link href={`/${storeSlug}/about`} className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors">
-              About
+              About Us
             </Link>
             <Link href={`/${storeSlug}/contact`} className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors">
-              Contact
+              Contact Us
             </Link>
           </nav>
 
@@ -64,13 +64,13 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
           <nav className="md:hidden py-4 border-t border-gray-100">
             <div className="flex flex-col space-y-3">
               <Link href={`/${storeSlug}`} className="text-gray-800 hover:text-[#6B9B37] font-medium py-2" onClick={() => setIsMobileMenuOpen(false)}>
-                Products
+                Home
               </Link>
               <Link href={`/${storeSlug}/about`} className="text-gray-800 hover:text-[#6B9B37] font-medium py-2" onClick={() => setIsMobileMenuOpen(false)}>
-                About
+                About Us
               </Link>
               <Link href={`/${storeSlug}/contact`} className="text-gray-800 hover:text-[#6B9B37] font-medium py-2" onClick={() => setIsMobileMenuOpen(false)}>
-                Contact
+                Contact Us
               </Link>
             </div>
           </nav>
@@ -85,6 +85,7 @@ export default function CartPage() {
   const storeSlug = params.storeSlug as string
 
   const [store, setStore] = useState<Store | null>(null)
+  const [categories, setCategories] = useState<Category[]>([])
   const [isLoadingStore, setIsLoadingStore] = useState(true)
 
   const {
@@ -108,13 +109,17 @@ export default function CartPage() {
     setStoreSlug(storeSlug)
   }, [storeSlug, setStoreSlug])
 
-  // Fetch store info
+  // Fetch store info and categories
   useEffect(() => {
     async function fetchStore() {
       setIsLoadingStore(true)
       try {
-        const storeData = await storeApi.getStore(storeSlug)
+        const [storeData, categoriesData] = await Promise.all([
+          storeApi.getStore(storeSlug),
+          storeApi.getCategories(storeSlug).catch(() => []),
+        ])
         setStore(storeData)
+        setCategories(categoriesData)
       } catch (err) {
         console.error("Error fetching store:", err)
       } finally {
@@ -399,7 +404,7 @@ export default function CartPage() {
         </div>
       </main>
 
-      <Footer />
+      <StoreFooter store={store} storeSlug={storeSlug} categories={categories} />
     </div>
   )
 }

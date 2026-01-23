@@ -7,7 +7,7 @@ import Link from "next/link"
 import { storeApi, Store, Product, ProductsResponse, Category } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
 import { SearchBar } from "@/components/SearchBar"
-import { Footer } from "@/components/Footer"
+import { StoreFooter } from "@/components/StoreFooter"
 import { ShoppingCart, Menu, X, MapPin, Loader2, ChevronDown } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
@@ -38,19 +38,19 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
               href={`/${storeSlug}`}
               className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
             >
-              Products
+              Home
             </Link>
             <Link
               href={`/${storeSlug}/about`}
               className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
             >
-              About
+              About Us
             </Link>
             <Link
               href={`/${storeSlug}/contact`}
               className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
             >
-              Contact
+              Contact Us
             </Link>
           </nav>
 
@@ -90,21 +90,21 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
                 className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Products
+                Home
               </Link>
               <Link
                 href={`/${storeSlug}/about`}
                 className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                About
+                About Us
               </Link>
               <Link
                 href={`/${storeSlug}/contact`}
                 className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Contact
+                Contact Us
               </Link>
             </div>
           </nav>
@@ -447,7 +447,7 @@ export default function StorePage() {
         )}
       </main>
 
-      <Footer />
+      <StoreFooter store={store} storeSlug={storeSlug} categories={categories} />
     </div>
   )
 }

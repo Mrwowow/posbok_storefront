@@ -126,6 +126,10 @@ export interface Store {
   business_logo?: string | null
   published_categories?: string[] | null
   verification_status?: string
+  about_us?: string | null
+  facebook_url?: string | null
+  twitter_url?: string | null
+  instagram_url?: string | null
   created_at: string
   updated_at: string
   Business: {
