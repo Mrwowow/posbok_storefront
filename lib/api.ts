@@ -5,7 +5,10 @@ const API_BASE_URL = 'https://api.posbok.com/api'
 
 // Helper to get or create session ID for cart
 export function getSessionId(): string {
-  if (typeof window === 'undefined') return ''
+  if (typeof window === 'undefined') {
+    // Return a placeholder for SSR - actual calls should only happen client-side
+    return 'ssr-placeholder'
+  }
 
   let sessionId = localStorage.getItem('cart-session-id')
   if (!sessionId) {
@@ -123,6 +126,10 @@ export interface Store {
   business_logo?: string | null
   published_categories?: string[] | null
   verification_status?: string
+  about_us?: string | null
+  facebook_url?: string | null
+  twitter_url?: string | null
+  instagram_url?: string | null
   created_at: string
   updated_at: string
   Business: {
@@ -245,14 +252,24 @@ class ApiError extends Error {
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
+  const data = await response.json().catch(() => ({}))
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}))
     throw new ApiError(
-      errorData.message || `Request failed with status ${response.status}`,
+      data.message || `Request failed with status ${response.status}`,
       response.status
     )
   }
-  return response.json()
+
+  // Also check for success: false in response body (API may return 200 with error)
+  if (data.success === false) {
+    throw new ApiError(
+      data.message || 'Request failed',
+      response.status
+    )
+  }
+
+  return data as T
 }
 
 // ============================================

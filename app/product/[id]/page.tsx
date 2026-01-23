@@ -6,6 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
+import { ImageCarousel } from "@/components/ImageCarousel"
 import { useCart } from "@/contexts/CartContext"
 import { useReviews } from "@/hooks/useReviews"
 import { SubmitReviewData } from "@/lib/api"
@@ -19,7 +20,12 @@ const products = [
     price: 5400,
     originalPrice: 6000,
     discount: 10,
-    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop",
+    images: [
+      { id: 1, image_url: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop", is_primary: true },
+      { id: 2, image_url: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&h=800&fit=crop", is_primary: false },
+      { id: 3, image_url: "https://images.unsplash.com/photo-1586816879360-004f5b0c51e5?w=800&h=800&fit=crop", is_primary: false },
+      { id: 4, image_url: "https://images.unsplash.com/photo-1613141411244-0e4ac259d217?w=800&h=800&fit=crop", is_primary: false },
+    ],
     rating: 4.5,
     reviewCount: 124,
     seller: "Earot Communications",
@@ -41,7 +47,10 @@ const products = [
     id: "2",
     name: "Oraimo Wireless Mouse + Mouse Pad",
     price: 7500,
-    image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&h=800&fit=crop",
+    images: [
+      { id: 1, image_url: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&h=800&fit=crop", is_primary: true },
+      { id: 2, image_url: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop", is_primary: false },
+    ],
     rating: 5,
     reviewCount: 89,
     seller: "Unique Accessories",
@@ -350,27 +359,15 @@ export default function ProductDetailPage() {
 
           {/* Product Details */}
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-12">
-            {/* Product Images */}
-            <div className="space-y-4">
-              <div className="relative aspect-square bg-white rounded-lg overflow-hidden">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                {product.deliveryAvailable ? (
-                  <span className="absolute top-3 left-3 px-3 py-1 text-xs font-medium rounded bg-[#6B9B37] text-white">
-                    Delivery Available
-                  </span>
-                ) : (
-                  <span className="absolute top-3 left-3 px-3 py-1 text-xs font-medium rounded bg-gray-600 text-white">
-                    Delivery Unavailable
-                  </span>
-                )}
-              </div>
-            </div>
+            {/* Product Images Carousel */}
+            <ImageCarousel
+              images={product.images}
+              productName={product.name}
+              badge={{
+                text: product.deliveryAvailable ? "Delivery Available" : "Delivery Unavailable",
+                variant: product.deliveryAvailable ? "success" : "error",
+              }}
+            />
 
             {/* Product Info */}
             <div className="space-y-6">
