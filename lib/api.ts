@@ -74,6 +74,30 @@ export interface Review {
   created_at: string
 }
 
+// API response structure from the server
+export interface ReviewsApiResponse {
+  success: boolean
+  message: string
+  data: {
+    reviews: Review[]
+    stats: {
+      averageRating: string
+      totalReviews: number
+      distribution: {
+        rating: number
+        count: number
+      } | Array<{ rating: number; count: number }>
+    }
+    pagination: {
+      currentPage: number
+      totalPages: number
+      totalItems: number
+      itemsPerPage: number
+    }
+  }
+}
+
+// Normalized response for the app
 export interface ReviewsResponse {
   reviews: Review[]
   pagination: {
@@ -426,7 +450,47 @@ export const reviewsApi = {
     const response = await fetch(url, {
       method: 'GET',
     })
-    return handleResponse<ReviewsResponse>(response)
+    const apiResponse = await handleResponse<ReviewsApiResponse>(response)
+
+    // Transform the API response to match our app's expected format
+    const { data } = apiResponse
+
+    // Build rating distribution from stats
+    const ratingDistribution: { 1: number; 2: number; 3: number; 4: number; 5: number } = {
+      1: 0, 2: 0, 3: 0, 4: 0, 5: 0
+    }
+
+    if (data.stats?.distribution) {
+      if (Array.isArray(data.stats.distribution)) {
+        // If distribution is an array of {rating, count}
+        data.stats.distribution.forEach(item => {
+          if (item.rating >= 1 && item.rating <= 5) {
+            ratingDistribution[item.rating as 1 | 2 | 3 | 4 | 5] = item.count
+          }
+        })
+      } else {
+        // If distribution is a single object {rating, count}
+        const { rating, count } = data.stats.distribution
+        if (rating >= 1 && rating <= 5) {
+          ratingDistribution[rating as 1 | 2 | 3 | 4 | 5] = count
+        }
+      }
+    }
+
+    return {
+      reviews: data.reviews || [],
+      pagination: {
+        page: data.pagination?.currentPage || 1,
+        limit: data.pagination?.itemsPerPage || 10,
+        total: data.pagination?.totalItems || 0,
+        totalPages: data.pagination?.totalPages || 1,
+      },
+      summary: {
+        averageRating: parseFloat(data.stats?.averageRating || '0'),
+        totalReviews: data.stats?.totalReviews || 0,
+        ratingDistribution,
+      },
+    }
   },
 
   /**
