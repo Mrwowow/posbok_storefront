@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/CartContext"
 import { useReviews } from "@/hooks/useReviews"
 import { SubmitReviewData } from "@/lib/api"
 import { Footer } from "@/components/Footer"
+import { ImageCarousel } from "@/components/ImageCarousel"
 import { Star, Truck, Shield, ChevronLeft, Minus, Plus, ShoppingCart, Heart, Share2, MapPin, ThumbsUp, Loader2, CheckCircle, Menu, X } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
@@ -354,31 +355,15 @@ export default function ProductDetailPage() {
 
           {/* Product Details */}
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-12">
-            {/* Product Images */}
-            <div className="space-y-4">
-              <div className="relative aspect-square bg-white rounded-lg overflow-hidden">
-                <Image
-                  src={imageUrl}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                <span className={`absolute top-3 left-3 px-3 py-1 text-xs font-medium rounded ${product.in_stock ? "bg-[#6B9B37] text-white" : "bg-gray-600 text-white"}`}>
-                  {product.in_stock ? "In Stock" : "Out of Stock"}
-                </span>
-              </div>
-              {/* Image thumbnails if multiple images */}
-              {product.images && product.images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                  {product.images.map((img, index) => (
-                    <div key={img.id || index} className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border-2 border-gray-200">
-                      <Image src={img.image_url} alt={`${product.name} ${index + 1}`} fill className="object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Product Images Carousel */}
+            <ImageCarousel
+              images={product.images || [{ image_url: imageUrl }]}
+              productName={product.name}
+              badge={{
+                text: product.in_stock ? "In Stock" : "Out of Stock",
+                variant: product.in_stock ? "success" : "error",
+              }}
+            />
 
             {/* Product Info */}
             <div className="space-y-6">
