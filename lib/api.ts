@@ -1,7 +1,7 @@
 // API Service Layer for POSBOK Storefront
 // Base URL: https://api.posbok.com
 
-const API_BASE_URL = 'http://localhost:5000/api'
+const API_BASE_URL = 'https://api.posbok.com/api'
 
 // Helper to get or create session ID for cart
 export function getSessionId(): string {
