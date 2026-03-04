@@ -7,7 +7,7 @@ import Link from "next/link"
 import { storeApi, Store, Category, PurchaseRequestData } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
 import { StoreFooter } from "@/components/StoreFooter"
-import { Minus, Plus, Trash2, ShoppingBag, ChevronLeft, ArrowRight, Loader2, ShoppingCart, Menu, X, CheckCircle, MapPin } from "lucide-react"
+import { Minus, Plus, Trash2, ShoppingBag, ChevronLeft, ArrowRight, Loader2, ShoppingCart, Menu, X, CheckCircle, MapPin, MessageCircle, Mail, Send } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -107,6 +107,7 @@ export default function CartPage() {
 
   // Checkout form state
   const [showCheckoutForm, setShowCheckoutForm] = useState(false)
+  const [sendMethod, setSendMethod] = useState<"whatsapp" | "email" | "message" | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [orderReference, setOrderReference] = useState<string | null>(null)
@@ -199,14 +200,59 @@ export default function CartPage() {
   }
 
   const handleProceedToCheckout = () => {
-    // Pre-fill checkout form with cart contact info
     setCheckoutForm(prev => ({
       ...prev,
       customer_email: contactEmail || cart?.customer_email || "",
       customer_phone: contactPhone || cart?.customer_phone || "",
     }))
     setShowCheckoutForm(true)
+    setSendMethod(null)
     setCheckoutError(null)
+  }
+
+  // Build order summary text for WhatsApp / Email
+  const buildOrderText = () => {
+    const businessName = store?.Business?.business_name || "Store"
+    const lines = [
+      `*Order Request – ${businessName}*`,
+      ``,
+      `*Customer:* ${checkoutForm.customer_name}`,
+      `*Email:* ${checkoutForm.customer_email}`,
+      `*Phone:* ${checkoutForm.customer_phone}`,
+      `*Delivery Location:* ${checkoutForm.customer_location}`,
+      ``,
+      `*Items:*`,
+      ...cartItems.map(item => `- ${item.product.name} x${item.quantity} @ ${formatPrice(item.price)} = ${formatPrice(item.quantity * item.price)}`),
+      ``,
+      `*Total: ${formatPrice(total)}*`,
+      checkoutForm.message ? `\n*Notes:* ${checkoutForm.message}` : "",
+    ]
+    return lines.filter(Boolean).join("\n")
+  }
+
+  const handleSendViaWhatsApp = () => {
+    const whatsapp = store?.whatsapp_number?.replace(/[^0-9]/g, "") || store?.contact_phone?.replace(/[^0-9]/g, "")
+    if (!whatsapp) {
+      setCheckoutError("This store has no WhatsApp number configured.")
+      return
+    }
+    const text = encodeURIComponent(buildOrderText())
+    window.open(`https://wa.me/${whatsapp}?text=${text}`, "_blank")
+    setOrderSuccess(true)
+    clearCart()
+  }
+
+  const handleSendViaEmail = () => {
+    const email = store?.contact_email
+    if (!email) {
+      setCheckoutError("This store has no email address configured.")
+      return
+    }
+    const subject = encodeURIComponent(`Order Request – ${store?.Business?.business_name || "Store"}`)
+    const body = encodeURIComponent(buildOrderText().replace(/\*/g, ""))
+    window.open(`mailto:${email}?subject=${subject}&body=${body}`, "_blank")
+    setOrderSuccess(true)
+    clearCart()
   }
 
   const handleSubmitPurchaseRequest = async (e: React.FormEvent) => {
@@ -214,6 +260,18 @@ export default function CartPage() {
     setIsSubmitting(true)
     setCheckoutError(null)
 
+    if (sendMethod === "whatsapp") {
+      handleSendViaWhatsApp()
+      setIsSubmitting(false)
+      return
+    }
+    if (sendMethod === "email") {
+      handleSendViaEmail()
+      setIsSubmitting(false)
+      return
+    }
+
+    // "message" — send via posbok API
     try {
       const purchaseData: PurchaseRequestData = {
         customer_name: checkoutForm.customer_name,
@@ -233,7 +291,6 @@ export default function CartPage() {
       if (response.success) {
         setOrderSuccess(true)
         setOrderReference(response.data?.reference_number || null)
-        // Clear the cart after successful order
         await clearCart()
       } else {
         setCheckoutError(response.message || "Failed to submit order. Please try again.")
@@ -477,9 +534,7 @@ export default function CartPage() {
                     <>
                       {/* Checkout Form */}
                       <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-gray-900">
-                          Checkout
-                        </h2>
+                        <h2 className="text-lg font-semibold text-gray-900">Checkout</h2>
                         <button
                           onClick={() => setShowCheckoutForm(false)}
                           className="text-sm text-gray-600 hover:text-[#6B9B37] transition-colors"
@@ -489,7 +544,7 @@ export default function CartPage() {
                       </div>
 
                       {/* Order Total Summary */}
-                      <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
                         <div className="flex justify-between items-center">
                           <span className="text-sm text-gray-600">{itemCount} items</span>
                           <span className="text-lg font-bold text-gray-900">{formatPrice(total)}</span>
@@ -504,12 +559,9 @@ export default function CartPage() {
 
                       <form onSubmit={handleSubmitPurchaseRequest} className="space-y-4">
                         <div>
-                          <label htmlFor="customer_name" className="block text-sm font-medium text-gray-700 mb-1">
-                            Full Name *
-                          </label>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                           <input
                             type="text"
-                            id="customer_name"
                             required
                             value={checkoutForm.customer_name}
                             onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_name: e.target.value }))}
@@ -519,12 +571,9 @@ export default function CartPage() {
                         </div>
 
                         <div>
-                          <label htmlFor="customer_email" className="block text-sm font-medium text-gray-700 mb-1">
-                            Email Address *
-                          </label>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
                           <input
                             type="email"
-                            id="customer_email"
                             required
                             value={checkoutForm.customer_email}
                             onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_email: e.target.value }))}
@@ -534,12 +583,9 @@ export default function CartPage() {
                         </div>
 
                         <div>
-                          <label htmlFor="customer_phone" className="block text-sm font-medium text-gray-700 mb-1">
-                            Phone Number *
-                          </label>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
                           <input
                             type="tel"
-                            id="customer_phone"
                             required
                             value={checkoutForm.customer_phone}
                             onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_phone: e.target.value }))}
@@ -549,15 +595,11 @@ export default function CartPage() {
                         </div>
 
                         <div>
-                          <label htmlFor="customer_location" className="block text-sm font-medium text-gray-700 mb-1">
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              Delivery Location *
-                            </span>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <span className="flex items-center gap-1"><MapPin className="w-4 h-4" />Delivery Location *</span>
                           </label>
                           <input
                             type="text"
-                            id="customer_location"
                             required
                             value={checkoutForm.customer_location}
                             onChange={(e) => setCheckoutForm(prev => ({ ...prev, customer_location: e.target.value }))}
@@ -567,34 +609,65 @@ export default function CartPage() {
                         </div>
 
                         <div>
-                          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                            Additional Notes (Optional)
-                          </label>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Additional Notes (Optional)</label>
                           <textarea
-                            id="message"
-                            rows={3}
+                            rows={2}
                             value={checkoutForm.message}
                             onChange={(e) => setCheckoutForm(prev => ({ ...prev, message: e.target.value }))}
                             className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6B9B37] focus:border-transparent resize-none"
-                            placeholder="Any special instructions for your order..."
+                            placeholder="Any special instructions..."
                           />
+                        </div>
+
+                        {/* Send Method Selection */}
+                        <div>
+                          <p className="text-sm font-medium text-gray-700 mb-2">Send order via *</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setSendMethod("whatsapp")}
+                              className={`flex flex-col items-center gap-1 p-3 rounded-lg border-2 text-xs font-medium transition-all ${sendMethod === "whatsapp" ? "border-green-500 bg-green-50 text-green-700" : "border-gray-200 text-gray-600 hover:border-green-400"}`}
+                            >
+                              <MessageCircle className="w-5 h-5" />
+                              WhatsApp
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setSendMethod("email")}
+                              className={`flex flex-col items-center gap-1 p-3 rounded-lg border-2 text-xs font-medium transition-all ${sendMethod === "email" ? "border-blue-500 bg-blue-50 text-blue-700" : "border-gray-200 text-gray-600 hover:border-blue-400"}`}
+                            >
+                              <Mail className="w-5 h-5" />
+                              Email
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setSendMethod("message")}
+                              className={`flex flex-col items-center gap-1 p-3 rounded-lg border-2 text-xs font-medium transition-all ${sendMethod === "message" ? "border-[#6B9B37] bg-[#f0f9e6] text-[#4A7A1A]" : "border-gray-200 text-gray-600 hover:border-[#6B9B37]"}`}
+                            >
+                              <Send className="w-5 h-5" />
+                              POSBOK
+                            </button>
+                          </div>
+                          {!sendMethod && (
+                            <p className="text-xs text-gray-400 mt-1">Select how to send your order to the seller</p>
+                          )}
                         </div>
 
                         <button
                           type="submit"
-                          disabled={isSubmitting}
+                          disabled={isSubmitting || !sendMethod}
                           className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#6B9B37] text-white font-medium rounded-lg hover:bg-[#4A7A1A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isSubmitting ? (
-                            <>
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                              Submitting Order...
-                            </>
+                            <><Loader2 className="w-4 h-4 animate-spin" />Sending...</>
+                          ) : sendMethod === "whatsapp" ? (
+                            <><MessageCircle className="w-4 h-4" />Send via WhatsApp</>
+                          ) : sendMethod === "email" ? (
+                            <><Mail className="w-4 h-4" />Send via Email</>
+                          ) : sendMethod === "message" ? (
+                            <><Send className="w-4 h-4" />Send via POSBOK</>
                           ) : (
-                            <>
-                              Submit Purchase Request
-                              <ArrowRight className="w-4 h-4" />
-                            </>
+                            <>Select a send method above<ArrowRight className="w-4 h-4" /></>
                           )}
                         </button>
 

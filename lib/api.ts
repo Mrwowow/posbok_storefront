@@ -1,7 +1,7 @@
 // API Service Layer for POSBOK Storefront
 // Base URL: https://api.posbok.com
 
-const API_BASE_URL = 'https://api.posbok.com/api'
+const API_BASE_URL = 'http://localhost:5000/api'
 
 // Helper to get or create session ID for cart
 export function getSessionId(): string {
@@ -616,6 +616,69 @@ export const storeApi = {
       body: JSON.stringify(data),
     })
     return handleResponse<PurchaseRequestResponse>(response)
+  },
+}
+
+// ============================================
+// ALL STORES PRODUCT TYPES & API
+// ============================================
+
+export interface AllProductsItem extends Product {
+  store_slug: string
+  store_name: string
+  store_logo: string | null
+}
+
+export interface AllProductsApiResponse {
+  success: boolean
+  message: string
+  data: {
+    products: AllProductsItem[]
+    pagination: {
+      currentPage: number
+      totalPages: number
+      totalItems: number
+      itemsPerPage: number
+    }
+  }
+}
+
+export interface AllProductsResponse {
+  products: AllProductsItem[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
+
+export const allProductsApi = {
+  async getAll(options?: {
+    page?: number
+    limit?: number
+    search?: string
+    categoryName?: string
+  }): Promise<AllProductsResponse> {
+    const params = new URLSearchParams()
+    if (options?.page) params.append('page', options.page.toString())
+    if (options?.limit) params.append('limit', options.limit.toString())
+    if (options?.search) params.append('search', options.search)
+    if (options?.categoryName) params.append('category', options.categoryName)
+
+    const qs = params.toString()
+    const url = `${API_BASE_URL}/storefront/public/products/all${qs ? `?${qs}` : ''}`
+    const response = await fetch(url, { method: 'GET' })
+    const result = await handleResponse<AllProductsApiResponse>(response)
+    return {
+      products: result.data.products,
+      pagination: {
+        page: result.data.pagination.currentPage,
+        limit: result.data.pagination.itemsPerPage,
+        total: result.data.pagination.totalItems,
+        totalPages: result.data.pagination.totalPages,
+      },
+    }
   },
 }
 

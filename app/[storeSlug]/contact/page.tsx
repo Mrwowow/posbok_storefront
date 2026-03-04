@@ -262,6 +262,61 @@ export default function StoreContactPage() {
                   </a>
                 </div>
               )}
+
+              {/* Store Location Map */}
+              {(store?.latitude && store?.longitude) ? (
+                <div className="mt-8">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-[#6B9B37]" />
+                    Store Location
+                  </h3>
+                  <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                    <iframe
+                      title="Store Location"
+                      width="100%"
+                      height="240"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${store.longitude - 0.01}%2C${store.latitude - 0.01}%2C${store.longitude + 0.01}%2C${store.latitude + 0.01}&layer=mapnik&marker=${store.latitude}%2C${store.longitude}`}
+                    />
+                  </div>
+                  <a
+                    href={`https://www.openstreetmap.org/?mlat=${store.latitude}&mlon=${store.longitude}#map=15/${store.latitude}/${store.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 mt-2 text-sm text-[#6B9B37] hover:underline"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    View larger map
+                  </a>
+                </div>
+              ) : store?.address ? (
+                <div className="mt-8">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-[#6B9B37]" />
+                    Store Location
+                  </h3>
+                  <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                    <iframe
+                      title="Store Location"
+                      width="100%"
+                      height="240"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=3.3%2C6.4%2C3.4%2C6.5&layer=mapnik`}
+                    />
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 mt-2 text-sm text-[#6B9B37] hover:underline"
+                  >
+                    <MapPin className="w-4 h-4" />
+                    Search on Google Maps
+                  </a>
+                </div>
+              ) : null}
             </div>
 
             {/* Contact Form */}

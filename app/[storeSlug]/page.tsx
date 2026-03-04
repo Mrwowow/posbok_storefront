@@ -8,9 +8,9 @@ import { storeApi, Store, Product, ProductsResponse, Category } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
 import { SearchBar } from "@/components/SearchBar"
 import { StoreFooter } from "@/components/StoreFooter"
-import { ShoppingCart, Menu, X, MapPin, Loader2, ChevronDown, SearchX, Package } from "lucide-react"
+import { ShoppingCart, Menu, X, MapPin, Loader2, ChevronDown, SearchX, Package, Plus, CheckCircle } from "lucide-react"
 
-function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
+function StoreHeader({ store, storeSlug, onLogoClick }: { store: Store | null; storeSlug: string; onLogoClick?: () => void }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { itemCount } = useCart()
 
@@ -21,7 +21,7 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link href={`/${storeSlug}`} className="flex items-center">
+          <Link href={`/${storeSlug}`} className="flex items-center" onClick={onLogoClick}>
             <Image
               src={store?.business_logo || "/logo-2.png"}
               alt={businessName}
@@ -36,6 +36,7 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
           <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
             <Link
               href={`/${storeSlug}`}
+              onClick={onLogoClick}
               className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
             >
               Home
@@ -88,7 +89,7 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
               <Link
                 href={`/${storeSlug}`}
                 className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => { setIsMobileMenuOpen(false); onLogoClick?.() }}
               >
                 Home
               </Link>
@@ -115,6 +116,10 @@ function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: str
 }
 
 function ProductCard({ product, storeSlug }: { product: Product; storeSlug: string }) {
+  const { addToCart } = useCart()
+  const [isAdding, setIsAdding] = useState(false)
+  const [added, setAdded] = useState(false)
+
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -123,14 +128,28 @@ function ProductCard({ product, storeSlug }: { product: Product; storeSlug: stri
     }).format(amount)
   }
 
-  // Get the primary image or first image from the images array
   const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0]
   const imageUrl = primaryImage?.image_url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop"
 
-  // Calculate discount if supposed_price exists and is higher than selling_price
   const discount = product.supposed_price && product.supposed_price > product.selling_price
     ? Math.round(((product.supposed_price - product.selling_price) / product.supposed_price) * 100)
     : null
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!product.in_stock || isAdding) return
+    setIsAdding(true)
+    try {
+      await addToCart(product.id, 1)
+      setAdded(true)
+      setTimeout(() => setAdded(false), 2000)
+    } catch {
+      // silently fail — cart context logs it
+    } finally {
+      setIsAdding(false)
+    }
+  }
 
   return (
     <Link href={`/${storeSlug}/product/${product.id}`} className="product-card bg-white rounded-lg overflow-hidden cursor-pointer block">
@@ -151,11 +170,37 @@ function ProductCard({ product, storeSlug }: { product: Product; storeSlug: stri
         >
           {product.in_stock ? "In Stock" : "Out of Stock"}
         </div>
+        {/* Items left indicator */}
+        {product.in_stock && product.quantity_display && (
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-black/60 text-white text-[9px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded">
+            {product.quantity_display} left
+          </div>
+        )}
+        {/* Quick Add to Cart overlay button */}
+        <button
+          onClick={handleAddToCart}
+          disabled={!product.in_stock || isAdding}
+          aria-label="Add to cart"
+          className={`absolute bottom-2 right-2 w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-md transition-all ${
+            added
+              ? "bg-[#4A7A1A] text-white"
+              : product.in_stock
+              ? "bg-[#6B9B37] text-white hover:bg-[#4A7A1A]"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+        >
+          {isAdding ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : added ? (
+            <CheckCircle className="w-3.5 h-3.5" />
+          ) : (
+            <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
+          )}
+        </button>
       </div>
 
       {/* Content */}
       <div className="p-3 sm:p-4">
-        {/* Product Name */}
         <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-1.5 sm:mb-2 line-clamp-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
           {product.name}
         </h3>
@@ -193,12 +238,26 @@ function ProductCard({ product, storeSlug }: { product: Product; storeSlug: stri
           )}
         </div>
 
-        {/* Quantity Display */}
-        {product.quantity_display && (
-          <div className="text-[10px] sm:text-xs text-gray-400 mt-1">
-            {product.quantity_display}
-          </div>
-        )}
+        {/* Add to Cart row */}
+        <button
+          onClick={handleAddToCart}
+          disabled={!product.in_stock || isAdding}
+          className={`mt-2 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            added
+              ? "bg-[#4A7A1A] text-white"
+              : product.in_stock
+              ? "bg-[#6B9B37] text-white hover:bg-[#4A7A1A]"
+              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          {isAdding ? (
+            <><Loader2 className="w-3 h-3 animate-spin" />Adding...</>
+          ) : added ? (
+            <><CheckCircle className="w-3 h-3" />Added!</>
+          ) : (
+            <><ShoppingCart className="w-3 h-3" />Add to Cart</>
+          )}
+        </button>
       </div>
     </Link>
   )
@@ -250,6 +309,12 @@ export default function StorePage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
 
   const { setStoreSlug } = useCart()
+
+  // Reset search & category — used by Home link, logo click, "All Categories"
+  const handleResetFilters = () => {
+    setSearchQuery("")
+    setSelectedCategoryId(null)
+  }
 
   // Update cart context with current store slug
   useEffect(() => {
@@ -334,7 +399,7 @@ export default function StorePage() {
 
   return (
     <div className="min-h-screen bg-[#FAFAF0] flex flex-col">
-      <StoreHeader store={store} storeSlug={storeSlug} />
+      <StoreHeader store={store} storeSlug={storeSlug} onLogoClick={handleResetFilters} />
 
       <main className="flex-grow max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         {/* Store Banner */}
@@ -375,9 +440,8 @@ export default function StorePage() {
         )}
 
         {/* Search and Filter Bar */}
-        <div className="mb-4 sm:mb-6 md:mb-8">
+        <div className="mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
-            {/* Search Bar */}
             <div className="flex-grow">
               <SearchBar
                 placeholder="Search products..."
@@ -385,8 +449,6 @@ export default function StorePage() {
                 onSearch={handleSearch}
               />
             </div>
-
-            {/* Category Filter */}
             {categories.length > 0 && (
               <div className="flex-shrink-0">
                 <CategoryDropdown
@@ -398,6 +460,35 @@ export default function StorePage() {
             )}
           </div>
         </div>
+
+        {/* Category Pills */}
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+            <button
+              onClick={handleResetFilters}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                selectedCategoryId === null && !searchQuery
+                  ? "bg-[#6B9B37] text-white border-[#6B9B37]"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-[#6B9B37] hover:text-[#6B9B37]"
+              }`}
+            >
+              All Categories
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => { setSelectedCategoryId(cat.id); setSearchQuery("") }}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                  selectedCategoryId === cat.id
+                    ? "bg-[#6B9B37] text-white border-[#6B9B37]"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-[#6B9B37] hover:text-[#6B9B37]"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Products Grid */}
         {isLoadingProducts ? (
@@ -445,10 +536,7 @@ export default function StorePage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 {(searchQuery || selectedCategoryId) && (
                   <button
-                    onClick={() => {
-                      setSearchQuery("")
-                      setSelectedCategoryId(null)
-                    }}
+                    onClick={handleResetFilters}
                     className="inline-flex items-center justify-center px-6 py-3 bg-[#6B9B37] text-white font-medium rounded-lg hover:bg-[#4A7A1A] transition-colors"
                   >
                     View All Products
