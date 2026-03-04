@@ -1,7 +1,7 @@
 // API Service Layer for POSBOK Storefront
 // Base URL: https://api.posbok.com
 
-const API_BASE_URL = 'https://api.posbok.com/api'
+const API_BASE_URL = 'http://localhost:5000/api'
 
 // Helper to get or create session ID for cart
 export function getSessionId(): string {
@@ -74,6 +74,30 @@ export interface Review {
   created_at: string
 }
 
+// API response structure from the server
+export interface ReviewsApiResponse {
+  success: boolean
+  message: string
+  data: {
+    reviews: Review[]
+    stats: {
+      averageRating: string
+      totalReviews: number
+      distribution: {
+        rating: number
+        count: number
+      } | Array<{ rating: number; count: number }>
+    }
+    pagination: {
+      currentPage: number
+      totalPages: number
+      totalItems: number
+      itemsPerPage: number
+    }
+  }
+}
+
+// Normalized response for the app
 export interface ReviewsResponse {
   reviews: Review[]
   pagination: {
@@ -240,6 +264,33 @@ export interface CategoriesApiResponse {
   data: Category[]
 }
 
+// Purchase Request types
+export interface PurchaseRequestItem {
+  product_id: number
+  quantity: number
+  price: number
+}
+
+export interface PurchaseRequestData {
+  customer_name: string
+  customer_email: string
+  customer_phone: string
+  customer_location: string
+  items: PurchaseRequestItem[]
+  message?: string
+}
+
+export interface PurchaseRequestResponse {
+  success: boolean
+  message: string
+  data?: {
+    id: number
+    reference_number: string
+    status: string
+    created_at: string
+  }
+}
+
 // API Error handling
 class ApiError extends Error {
   status: number
@@ -399,7 +450,47 @@ export const reviewsApi = {
     const response = await fetch(url, {
       method: 'GET',
     })
-    return handleResponse<ReviewsResponse>(response)
+    const apiResponse = await handleResponse<ReviewsApiResponse>(response)
+
+    // Transform the API response to match our app's expected format
+    const { data } = apiResponse
+
+    // Build rating distribution from stats
+    const ratingDistribution: { 1: number; 2: number; 3: number; 4: number; 5: number } = {
+      1: 0, 2: 0, 3: 0, 4: 0, 5: 0
+    }
+
+    if (data.stats?.distribution) {
+      if (Array.isArray(data.stats.distribution)) {
+        // If distribution is an array of {rating, count}
+        data.stats.distribution.forEach(item => {
+          if (item.rating >= 1 && item.rating <= 5) {
+            ratingDistribution[item.rating as 1 | 2 | 3 | 4 | 5] = item.count
+          }
+        })
+      } else {
+        // If distribution is a single object {rating, count}
+        const { rating, count } = data.stats.distribution
+        if (rating >= 1 && rating <= 5) {
+          ratingDistribution[rating as 1 | 2 | 3 | 4 | 5] = count
+        }
+      }
+    }
+
+    return {
+      reviews: data.reviews || [],
+      pagination: {
+        page: data.pagination?.currentPage || 1,
+        limit: data.pagination?.itemsPerPage || 10,
+        total: data.pagination?.totalItems || 0,
+        totalPages: data.pagination?.totalPages || 1,
+      },
+      summary: {
+        averageRating: parseFloat(data.stats?.averageRating || '0'),
+        totalReviews: data.stats?.totalReviews || 0,
+        ratingDistribution,
+      },
+    }
   },
 
   /**
@@ -508,6 +599,86 @@ export const storeApi = {
     })
     const result = await handleResponse<CategoriesApiResponse>(response)
     return result.data
+  },
+
+  /**
+   * Submit a purchase request
+   */
+  async submitPurchaseRequest(
+    storeSlug: string,
+    data: PurchaseRequestData
+  ): Promise<PurchaseRequestResponse> {
+    const response = await fetch(`${API_BASE_URL}/storefront/public/${storeSlug}/purchase-request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    return handleResponse<PurchaseRequestResponse>(response)
+  },
+}
+
+// ============================================
+// ALL STORES PRODUCT TYPES & API
+// ============================================
+
+export interface AllProductsItem extends Product {
+  store_slug: string
+  store_name: string
+  store_logo: string | null
+}
+
+export interface AllProductsApiResponse {
+  success: boolean
+  message: string
+  data: {
+    products: AllProductsItem[]
+    pagination: {
+      currentPage: number
+      totalPages: number
+      totalItems: number
+      itemsPerPage: number
+    }
+  }
+}
+
+export interface AllProductsResponse {
+  products: AllProductsItem[]
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
+
+export const allProductsApi = {
+  async getAll(options?: {
+    page?: number
+    limit?: number
+    search?: string
+    categoryName?: string
+  }): Promise<AllProductsResponse> {
+    const params = new URLSearchParams()
+    if (options?.page) params.append('page', options.page.toString())
+    if (options?.limit) params.append('limit', options.limit.toString())
+    if (options?.search) params.append('search', options.search)
+    if (options?.categoryName) params.append('category', options.categoryName)
+
+    const qs = params.toString()
+    const url = `${API_BASE_URL}/storefront/public/products/all${qs ? `?${qs}` : ''}`
+    const response = await fetch(url, { method: 'GET' })
+    const result = await handleResponse<AllProductsApiResponse>(response)
+    return {
+      products: result.data.products,
+      pagination: {
+        page: result.data.pagination.currentPage,
+        limit: result.data.pagination.itemsPerPage,
+        total: result.data.pagination.totalItems,
+        totalPages: result.data.pagination.totalPages,
+      },
+    }
   },
 }
 

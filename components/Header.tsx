@@ -3,13 +3,10 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ShoppingCart, LogIn, Menu, X } from "lucide-react"
-import { useCart } from "@/contexts/CartContext"
+import { Menu, X } from "lucide-react"
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { itemCount } = useCart()
-
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,47 +26,40 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
             <Link
-              href="/"
+              href="#features"
               className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
             >
-              Home
+              Features
+            </Link>
+            <Link
+              href="#pricing"
+              className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
+            >
+              Pricing
+            </Link>
+            <Link
+              href="#faq"
+              className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
+            >
+              Learn
             </Link>
             <Link
               href="/about"
               className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
             >
-              About Us
-            </Link>
-            <Link
-              href="/services"
-              className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
-            >
-              Services
-            </Link>
-            <Link
-              href="/contact"
-              className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors"
-            >
-              Contact Us
+              Company
             </Link>
           </nav>
 
-          {/* Right side icons */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* Cart */}
-            <Link href="/cart" className="relative p-2 text-[#6B9B37] hover:text-[#4A7A1A] transition-colors">
-              <ShoppingCart className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#6B9B37] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {itemCount > 99 ? "99+" : itemCount}
-                </span>
-              )}
+          {/* Right side */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Get Started CTA */}
+            <Link
+              href="#pricing"
+              className="hidden md:inline-flex items-center px-4 py-2 bg-[#6B9B37] text-white text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors"
+            >
+              GET STARTED
             </Link>
-
-            {/* Login */}
-            <button className="p-2 text-[#6B9B37] hover:text-[#4A7A1A] transition-colors">
-              <LogIn className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.5} />
-            </button>
 
             {/* Mobile Menu Button */}
             <button
@@ -90,34 +80,11 @@ export function Header() {
         {isMobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-100">
             <div className="flex flex-col space-y-3">
-              <Link
-                href="/"
-                className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link
-                href="/services"
-                className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Services
-              </Link>
-              <Link
-                href="/contact"
-                className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Contact Us
-              </Link>
+              <Link href="#features" className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Features</Link>
+              <Link href="#pricing" className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link>
+              <Link href="#faq" className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Learn</Link>
+              <Link href="/about" className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Company</Link>
+              <Link href="#pricing" className="inline-flex items-center justify-center px-4 py-2 bg-[#6B9B37] text-white text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors mt-2" onClick={() => setIsMobileMenuOpen(false)}>GET STARTED</Link>
             </div>
           </nav>
         )}
