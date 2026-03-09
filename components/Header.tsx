@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, X, ChevronDown, Smartphone, ShoppingCart, Warehouse, Globe, Store, ArrowRight, Code, Puzzle, Server, Bot, UserPlus, Settings, Users, CreditCard, Package, Receipt, BarChart3, UserCog } from "lucide-react"
+import { Menu, X, ChevronDown, Smartphone, ShoppingCart, Warehouse, Globe, Store, ArrowRight, Code, Puzzle, Server, Bot, UserPlus, Settings, Users, CreditCard, Package, Receipt, BarChart3, UserCog, LogIn } from "lucide-react"
 
 const featureDropdownItems = [
   {
@@ -355,6 +355,17 @@ export function Header() {
             >
               GET STARTED
             </Link>
+
+            {/* Login */}
+            <a
+              href="https://app.posbok.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 border border-gray-300 text-gray-800 text-sm font-semibold rounded-full hover:border-[#6B9B37] hover:text-[#6B9B37] transition-colors"
+            >
+              <LogIn className="w-4 h-4" />
+              Login
+            </a>
 
             {/* Mobile Menu Button */}
             <button
