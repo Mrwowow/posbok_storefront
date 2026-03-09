@@ -1,182 +1,171 @@
 "use client"
 
+import Image from "next/image"
+import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
-import { Users, Target, Award, Heart } from "lucide-react"
+import { Check, Lightbulb, Shield, Users, TrendingUp, Lock, Gauge } from "lucide-react"
 
-const values = [
-  {
-    icon: Users,
-    title: "Community First",
-    description: "We believe in empowering local businesses and connecting communities through commerce.",
-  },
-  {
-    icon: Target,
-    title: "Quality Assured",
-    description: "Every seller on our platform is verified to ensure you get the best products.",
-  },
-  {
-    icon: Award,
-    title: "Trust & Transparency",
-    description: "We maintain honest pricing and clear communication between buyers and sellers.",
-  },
-  {
-    icon: Heart,
-    title: "Customer Care",
-    description: "Your satisfaction is our priority. We're here to help every step of the way.",
-  },
+const stats = [
+  { value: "150+", label: "Active Users" },
+  { value: "10,000+", label: "Transactions Processed" },
+  { value: "99.9%", label: "Platform Uptime" },
 ]
 
-const team = [
-  {
-    name: "Emeka Okonkwo",
-    role: "Founder & CEO",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop",
-  },
-  {
-    name: "Adaeze Nwosu",
-    role: "Head of Operations",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop",
-  },
-  {
-    name: "Chidi Eze",
-    role: "Technical Lead",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop",
-  },
+const values = [
+  { icon: Lightbulb, title: "Innovation", desc: "We build forward-looking systems that adapt to evolving business needs." },
+  { icon: Shield, title: "Reliability", desc: "We deliver stable, secure, and dependable digital infrastructure." },
+  { icon: Users, title: "Customer-Driven", desc: "We design solutions around real business workflows and user needs." },
+  { icon: TrendingUp, title: "Scalability", desc: "Our systems are built to grow with businesses of any size." },
+  { icon: Lock, title: "Integrity", desc: "We uphold transparency, data privacy, and ethical technology practices." },
+  { icon: Gauge, title: "Operational Excellence", desc: "We prioritize performance, efficiency, and enterprise-grade standards." },
 ]
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#FAFAF0] flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
 
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="bg-[#6B9B37] text-white py-12 sm:py-16 md:py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
-              About POSbok
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto opacity-90">
-              Connecting local businesses with customers across Nigeria.
-              We're building the future of community commerce.
+      {/* ── HERO ──────────────────────────────────────────────── */}
+      <section className="relative py-20 px-4 text-center overflow-hidden">
+        <Image src="/images/hero_image.jpg" alt="" fill priority className="object-cover" />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-4 italic">
+            Building Enterprise Systems for Modern Businesses
+          </h1>
+          <p className="text-gray-300 text-lg mb-8">
+            We design and deploy digital tools that simplify business operations, improve visibility, and enable organisations to grow with confidence.
+          </p>
+          <Link href="#about" className="inline-flex items-center px-8 py-3 bg-[#6B9B37] text-white font-semibold rounded-md hover:bg-[#4A7A1A] transition-colors text-sm">
+            LEARN MORE
+          </Link>
+        </div>
+      </section>
+
+      {/* ── A PLATFORM DESIGNED ────────────────────────────────── */}
+      <section className="bg-white py-20 px-4" id="about">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">About POSBOK</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            A Platform Designed to Power Business Operations
+          </h2>
+          <p className="text-gray-500 max-w-3xl mx-auto">
+            We build customizable digital solutions that streamline sales, inventory, workforce management, and enterprise operations across multiple business channels.
+          </p>
+        </div>
+      </section>
+
+      {/* ── ABOUT OUR COMPANY ──────────────────────────────────── */}
+      <section className="bg-white py-20 px-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <p className="text-sm text-gray-500 mb-2">About Our Company</p>
+            <h2 className="text-3xl font-bold text-[#6B9B37] mb-6">POSBok</h2>
+            <p className="text-gray-600 leading-relaxed">
+              POSBOK was founded in 2023 as an enterprise resource planning company which mainly focuses on a headless ERP system. It launched Mobile Money Operations, Inventory Management, Warehouse Management, and E-commerce to help mid-size and large businesses manage and record their transactions with proper data analysis.
             </p>
           </div>
-        </section>
-
-        {/* Our Story */}
-        <section className="py-12 sm:py-16 md:py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
-                  Our Story
-                </h2>
-                <div className="space-y-4 text-gray-600">
-                  <p>
-                    POSbok was born from a simple observation: local businesses have amazing
-                    products, but often struggle to reach customers beyond their immediate
-                    neighborhood.
-                  </p>
-                  <p>
-                    Founded in 2023, we set out to create a platform that bridges this gap.
-                    Our marketplace connects sellers from across Nigeria with customers
-                    looking for quality products at fair prices.
-                  </p>
-                  <p>
-                    Today, we serve thousands of customers and hundreds of sellers across
-                    multiple states, making it easier than ever to shop local and support
-                    community businesses.
-                  </p>
-                </div>
-              </div>
-              <div className="relative h-64 sm:h-80 md:h-96 rounded-lg overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1556740758-90de374c12ad?w=600&h=400&fit=crop"
-                  alt="Local marketplace"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
+          <div className="rounded-2xl overflow-hidden shadow-lg">
+            <Image src="/images/about-team.jpg" alt="POSBOK Team" width={600} height={400} className="w-full h-auto object-cover" />
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Our Values */}
-        <section className="py-12 sm:py-16 md:py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12">
-              Our Values
+      {/* ── ABOUT POSBOK + STATS ───────────────────────────────── */}
+      <section className="bg-[#F8FCF3] py-20 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">About POSBOK</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 italic">
+            We create solutions which make<br />the process faster
+          </h2>
+          <p className="text-gray-500 mb-12">Everything you need to scale faster</p>
+
+          <div className="flex flex-wrap justify-center gap-8 sm:gap-16">
+            {stats.map(s => (
+              <div key={s.label} className="text-center">
+                <p className="text-4xl sm:text-5xl font-bold text-gray-900">{s.value}</p>
+                <p className="text-sm text-gray-500 mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── OUR VALUES ──────────────────────────────────────────── */}
+      <section className="bg-white py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">Our Values</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Building Better for the Best of<br />Businesses
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-              {values.map((value) => (
-                <div key={value.title} className="text-center p-6 rounded-lg bg-[#FAFAF0]">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#6B9B37] text-white mb-4">
-                    <value.icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {value.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {value.description}
-                  </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {values.map(v => (
+              <div key={v.title} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-10 h-10 rounded-full bg-[#e8f5d5] flex items-center justify-center mb-4">
+                  <v.icon className="w-5 h-5 text-[#6B9B37]" strokeWidth={2} />
                 </div>
+                <h3 className="font-bold text-gray-900 mb-2">{v.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{v.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── MOBILE APP ──────────────────────────────────────────── */}
+      <section className="bg-white py-20 px-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div className="flex justify-center">
+            <Image src="/images/POSBOK -  Demo UI (8).png" alt="POSBOK Mobile App" width={400} height={500} className="rounded-3xl shadow-2xl w-auto max-h-[500px] object-contain" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">Manage you business on the go</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Download Our Mobile app</h2>
+            <p className="text-gray-500 mb-6">Manage transactions, view live reports, and monitor inventory from your pocket.</p>
+            <ul className="space-y-3 mb-8">
+              {["Offline Access that syncs automatically when connected.", "Monitor stock levels and sales performance from anywhere.", "Process POS transactions directly via the mobile app.", "Get immediate notifications for low stock or transactions made."].map(item => (
+                <li key={item} className="flex items-start gap-3 text-gray-700 text-sm">
+                  <span className="mt-0.5 w-5 h-5 rounded-full bg-[#6B9B37] flex items-center justify-center flex-shrink-0"><Check className="w-3 h-3 text-white" strokeWidth={3} /></span>
+                  {item}
+                </li>
               ))}
+            </ul>
+            <div className="flex gap-4">
+              <div className="bg-black text-white rounded-xl px-5 py-3 flex items-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors">
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                <div><p className="text-xs text-gray-300">Download on the</p><p className="text-sm font-semibold">App Store</p></div>
+              </div>
+              <div className="bg-black text-white rounded-xl px-5 py-3 flex items-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors">
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.63.24.97.21l12.92-7.46-2.89-2.89-11 10.14zm16.32-9.43L17 12.95l3.04-1.76-3.04-1.76-2.5 2.5 2.5 2.5 2.5-2.5zm-15.85 9.23c-.19-.11-.34-.28-.44-.48L14.74 12 3.21 1.68c.1-.2.25-.37.44-.48L16.5 8.66 13.26 12l3.24 3.34-9.85 8.22z"/></svg>
+                <div><p className="text-xs text-gray-300">Get it on</p><p className="text-sm font-semibold">Google Play</p></div>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Team Section */}
-        <section className="py-12 sm:py-16 md:py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8 sm:mb-12">
-              Meet Our Team
+      {/* ── CTA BANNER ───────────────────────────────────────────── */}
+      <section className="bg-[#7fb239] py-16 px-4 rounded-t-[20px]">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">
+              Transform your business today and enjoy an efficient Business Management
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
-              {team.map((member) => (
-                <div key={member.name} className="text-center">
-                  <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-4 rounded-full overflow-hidden">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {member.name}
-                  </h3>
-                  <p className="text-sm text-[#6B9B37]">
-                    {member.role}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <p className="text-white mb-6">
+              Join over 150+ Businesses who trust POSbok for their daily operations.
+            </p>
+            <Link href="#" className="inline-flex items-center px-8 py-3 border-2 border-white text-white font-semibold rounded-md hover:bg-white hover:text-gray-900 transition-colors text-sm">
+              SIGN UP
+            </Link>
           </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="py-12 sm:py-16 md:py-20 bg-[#6B9B37] text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center">
-              <div>
-                <div className="text-3xl sm:text-4xl font-bold mb-2">500+</div>
-                <div className="text-sm sm:text-base opacity-90">Active Sellers</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-bold mb-2">10,000+</div>
-                <div className="text-sm sm:text-base opacity-90">Happy Customers</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-bold mb-2">15</div>
-                <div className="text-sm sm:text-base opacity-90">States Covered</div>
-              </div>
-              <div>
-                <div className="text-3xl sm:text-4xl font-bold mb-2">50,000+</div>
-                <div className="text-sm sm:text-base opacity-90">Products Listed</div>
-              </div>
-            </div>
+          <div className="flex justify-center">
+            <Image src="/images/inventory-view.png" alt="POSBOK Inventory" width={500} height={350} className="rounded-xl shadow-lg w-full h-auto" />
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
       <Footer />
     </div>
