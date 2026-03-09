@@ -478,6 +478,7 @@ export function Header() {
 
               <Link href="/about" className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Company</Link>
               <a href="https://app.posbok.com/createbusiness" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-[#6B9B37] text-white text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors mt-2" onClick={() => setIsMobileMenuOpen(false)}>GET STARTED</a>
+              <a href="https://app.posbok.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 border border-gray-300 text-gray-800 text-sm font-semibold rounded-full hover:border-[#6B9B37] hover:text-[#6B9B37] transition-colors mt-2" onClick={() => setIsMobileMenuOpen(false)}><LogIn className="w-4 h-4" />Login</a>
             </div>
           </nav>
         )}
