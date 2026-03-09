@@ -35,8 +35,8 @@ export function Footer() {
                 { label: "Storefront", href: "/storefront" },
                 { label: "Business Solutions", href: "/business-solutions" },
                 { label: "Testimonials", href: "#" },
-                { label: "Login", href: "#" },
-                { label: "Signup", href: "#" },
+                { label: "Login", href: "https://app.posbok.com" },
+                { label: "Signup", href: "https://app.posbok.com/createbusiness" },
               ].map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-sm text-gray-400 hover:text-[#8BC34A] transition-colors">
