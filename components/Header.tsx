@@ -349,12 +349,14 @@ export function Header() {
           {/* Right side */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Get Started CTA */}
-            <Link
-              href="/features#pricing"
+            <a
+              href="https://app.posbok.com/createbusiness"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden md:inline-flex items-center px-4 py-2 bg-[#6B9B37] text-white text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors"
             >
               GET STARTED
-            </Link>
+            </a>
 
             {/* Login */}
             <a
@@ -475,7 +477,7 @@ export function Header() {
               )}
 
               <Link href="/about" className="text-gray-800 hover:text-[#6B9B37] font-medium transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>Company</Link>
-              <Link href="/features#pricing" className="inline-flex items-center justify-center px-4 py-2 bg-[#6B9B37] text-white text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors mt-2" onClick={() => setIsMobileMenuOpen(false)}>GET STARTED</Link>
+              <a href="https://app.posbok.com/createbusiness" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-4 py-2 bg-[#6B9B37] text-white text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors mt-2" onClick={() => setIsMobileMenuOpen(false)}>GET STARTED</a>
             </div>
           </nav>
         )}
