@@ -31,9 +31,12 @@ export function Footer() {
             <ul className="space-y-3">
               {[
                 { label: "About Posbok", href: "/about" },
-                { label: "Business Solutions", href: "#features" },
-                { label: "Features", href: "#features" },
+                { label: "Features", href: "/features" },
+                { label: "Storefront", href: "/storefront" },
+                { label: "Business Solutions", href: "/business-solutions" },
                 { label: "Testimonials", href: "#" },
+                { label: "Login", href: "#" },
+                { label: "Signup", href: "#" },
               ].map((l) => (
                 <li key={l.label}>
                   <Link href={l.href} className="text-sm text-gray-400 hover:text-[#8BC34A] transition-colors">
@@ -44,11 +47,12 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Learn */}
+          {/* References */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Learn</h3>
+            <h3 className="text-sm font-semibold text-white mb-4">References</h3>
             <ul className="space-y-3">
               {[
+                { label: "Learn", href: "/learn" },
                 { label: "FAQs", href: "#faq" },
                 { label: "Contact", href: "/contact" },
               ].map((l) => (
@@ -63,19 +67,19 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Contact Us</h3>
+            <h3 className="text-sm font-semibold text-white mb-4">Contact</h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-[#8BC34A] mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-gray-400">support@posbok.com</span>
+                <span className="text-sm text-gray-400">posbokquickresponse@outlook.com</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#8BC34A] flex-shrink-0" />
-                <span className="text-sm text-gray-400">081234567890</span>
+                <span className="text-sm text-gray-400">07084230597</span>
               </li>
-              <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-[#8BC34A] mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-gray-400">No. 123 Street, Town, State, Nigeria</span>
+              <li className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-[#8BC34A] flex-shrink-0" />
+                <span className="text-sm text-gray-400">+2347084230597</span>
               </li>
             </ul>
           </div>

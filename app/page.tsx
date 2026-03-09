@@ -22,11 +22,11 @@ const whyFeatures = [
 ]
 
 const accelerators = [
-  { title: "On-Ground Technical Support", desc: "One-time physical setup Per-Shop.", price: "₦25,000" },
-  { title: "Virtual Staff Training Fee", desc: "3 hours Session for up to 5 staff members.", price: "₦15,000" },
-  { title: "Initial Inventory Upload Service", desc: "Upload up to 500 items into your Inventory.", price: "₦10,000" },
-  { title: "Barcode Scanner", desc: "High-speed USB Barcode Scanner (New).", price: "₦30,000" },
-  { title: "Mobile Thermal Printer", desc: "Portable Bluetooth thermal receipt printer.", price: "₦45,000" },
+  { title: "On-Ground Technical Support", desc: "One-time physical setup Per-Shop.", price: "₦25,000", image: "/images/technical-support.jpeg" },
+  { title: "Virtual Staff Training Fee", desc: "3 hours Session for up to 5 staff members.", price: "₦15,000", image: "/images/virtual-training.jpeg" },
+  { title: "Initial Inventory Upload Service", desc: "Upload up to 500 items into your Inventory.", price: "₦10,000", image: "/images/inventory-upload.jpeg" },
+  { title: "Barcode Scanner", desc: "High-speed USB Barcode Scanner (New).", price: "₦30,000", image: "/images/scanner.png" },
+  { title: "Mobile Thermal Printer", desc: "Portable Bluetooth thermal receipt printer.", price: "₦45,000", image: "/images/thermal-printer.jpeg" },
 ]
 
 const trustedBrands = ["vougue BOUTIQUE", "deep DIVE", "GOLDEN HOUR", "ElegantCursive"]
@@ -78,46 +78,62 @@ export default function HomePage() {
       <Header />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="bg-white pt-16 pb-20 px-4 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">Business Solutions</p>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight max-w-3xl mx-auto mb-6">
-          The All-in-One Platform for Modern Retail
-        </h1>
-        <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8">
-          Automatically Analyse your POS transactions, Inventory linked to an ECommerce
-          for your shop and warehouse operations, seamlessly with POSBOK
-        </p>
+      <section className="relative pt-16 pb-20 px-4 text-center overflow-hidden">
+        {/* Background image */}
+        <Image
+          src="/images/hero_image.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/60" />
 
-        {/* Hero search */}
-        <form
-          onSubmit={handleHeroSearch}
-          className="max-w-xl mx-auto flex items-center bg-gray-100 rounded-full px-5 py-3 mb-8 shadow-sm"
-        >
-          <Search className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
-          <input
-            value={heroSearch}
-            onChange={e => setHeroSearch(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400"
-            placeholder="Search products across all stores..."
-          />
-          <button type="submit" className="text-[#6B9B37] text-xs font-semibold ml-2 hover:text-[#4A7A1A] transition-colors">
-            Search
-          </button>
-        </form>
-
-        <Link
-          href="/storefront"
-          className="inline-flex items-center px-8 py-3 bg-[#6B9B37] text-white font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors text-sm"
-        >
-          BROWSE STOREFRONT
-        </Link>
-
-        {/* Trusted brands */}
-        <div className="mt-14">
-          <p className="text-gray-400 text-sm mb-5">
-            Over <span className="text-[#6B9B37] font-bold">150+</span> Businesses trust Posbok for their daily operations.
+        {/* Content */}
+        <div className="relative z-10">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#51c964] leading-tight max-w-3xl mx-auto mb-6">
+            The All-in-One Platform for Modern Retail
+          </h1>
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
+            Automatically Analyse your POS transactions, Inventory linked to an ECommerce
+            for your shop and warehouse operations, seamlessly with POSBOK
           </p>
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-10 items-center">
+
+          {/* Hero search */}
+          <form
+            onSubmit={handleHeroSearch}
+            className="max-w-xl mx-auto flex items-center bg-white/90 backdrop-blur-sm rounded-full px-5 py-3 mb-8 shadow-sm"
+          >
+            <Search className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
+            <input
+              value={heroSearch}
+              onChange={e => setHeroSearch(e.target.value)}
+              className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400"
+              placeholder="Search products across all stores..."
+            />
+            <button type="submit" className="text-[#6B9B37] text-xs font-semibold ml-2 hover:text-[#4A7A1A] transition-colors">
+              Search
+            </button>
+          </form>
+
+          <Link
+            href="/storefront"
+            className="inline-flex items-center px-8 py-3 bg-[#6B9B37] text-white font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors text-sm"
+          >
+            BROWSE STOREFRONT
+          </Link>
+
+        </div>
+      </section>
+
+      {/* ── TRUSTED BRANDS ─────────────────────────────────────── */}
+      <section className="bg-white py-12 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+            Over <span className="text-[#6B9B37]">150+</span> Businesses trust Posbok<br /> for their daily operations.
+          </h2>
+          <div className="flex flex-wrap justify-center gap-8 sm:gap-14 items-center">
             {trustedBrands.map((b) => (
               <span key={b} className="text-gray-400 font-semibold text-sm tracking-wide">{b}</span>
             ))}
@@ -140,10 +156,8 @@ export default function HomePage() {
               ))}
             </ul>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-4 aspect-video flex items-center justify-center">
-            <div className="w-full h-full bg-gradient-to-br from-[#e8f5d5] to-[#f0fae8] rounded-xl flex items-center justify-center">
-              <span className="text-[#6B9B37] font-bold text-lg opacity-40">Dashboard Preview</span>
-            </div>
+          <div className="bg-white rounded-2xl shadow-lg p-4">
+            <Image src="/images/dashboard-preview.png" alt="Dashboard Preview" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
         </div>
       </section>
@@ -151,10 +165,8 @@ export default function HomePage() {
       {/* ── MONITOR SALES ─────────────────────────────────────── */}
       <section className="bg-white py-20 px-4">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="order-2 md:order-1 bg-gray-50 rounded-2xl shadow-lg p-4 aspect-video flex items-center justify-center">
-            <div className="w-full h-full bg-gradient-to-br from-[#e8f5d5] to-[#f0fae8] rounded-xl flex items-center justify-center">
-              <span className="text-[#6B9B37] font-bold text-lg opacity-40">Sales Dashboard</span>
-            </div>
+          <div className="order-2 md:order-1 bg-gray-50 rounded-2xl shadow-lg p-4">
+            <Image src="/images/sales-dashboard.png" alt="Sales Dashboard" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
           <div className="order-1 md:order-2">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Monitor Sales Anytime, Anywhere</h2>
@@ -186,10 +198,8 @@ export default function HomePage() {
               ))}
             </ul>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-4 aspect-video flex items-center justify-center">
-            <div className="w-full h-full bg-gradient-to-br from-[#e8f5d5] to-[#f0fae8] rounded-xl flex items-center justify-center">
-              <span className="text-[#6B9B37] font-bold text-lg opacity-40">Inventory View</span>
-            </div>
+          <div className="bg-white rounded-2xl shadow-lg p-4">
+            <Image src="/images/inventory-view.png" alt="Inventory View" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
         </div>
       </section>
@@ -197,10 +207,8 @@ export default function HomePage() {
       {/* ── E-COMMERCE ────────────────────────────────────────── */}
       <section className="bg-white py-20 px-4">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="order-2 md:order-1 bg-gray-50 rounded-2xl shadow-lg p-4 aspect-video flex items-center justify-center">
-            <div className="w-full h-full bg-gradient-to-br from-[#e8f5d5] to-[#f0fae8] rounded-xl flex items-center justify-center">
-              <span className="text-[#6B9B37] font-bold text-lg opacity-40">Storefront Preview</span>
-            </div>
+          <div className="order-2 md:order-1 bg-gray-50 rounded-2xl shadow-lg p-4">
+            <Image src="/images/storefront-preview.png" alt="Storefront Preview" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
           <div className="order-1 md:order-2">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Launch Your Products Online. Instantly.</h2>
@@ -248,12 +256,18 @@ export default function HomePage() {
             <p className="text-gray-500 max-w-xl mx-auto">Equip your business with essential hardware and personalized services for a fast, hassle-free launch.</p>
             <p className="text-gray-400 text-sm mt-2">Choose the services and hardware you need (Optional):</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 gap-6">
             {accelerators.map(a => (
               <div key={a.title} className="border border-gray-100 rounded-2xl p-6 hover:border-[#6B9B37] hover:shadow-md transition-all">
-                <h3 className="font-semibold text-gray-900 mb-1">{a.title}</h3>
+                <div className="aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-gray-50">
+                  <Image src={a.image} alt={a.title} width={400} height={300} className="w-full h-full object-cover" />
+                </div>
+                <h3 className="font-semibold text-[#6B9B37] mb-1">{a.title}</h3>
                 <p className="text-gray-500 text-sm mb-4">{a.desc}</p>
-                <p className="text-2xl font-bold text-[#6B9B37]">{a.price}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-2xl font-bold text-gray-900">{a.price}</p>
+                  <button className="bg-[#6B9B37] text-white text-xs font-semibold px-4 py-2 rounded-md hover:bg-[#4A7A1A] transition-colors">ADD TO CART</button>
+                </div>
               </div>
             ))}
           </div>
