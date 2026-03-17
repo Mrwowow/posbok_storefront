@@ -353,7 +353,7 @@ export function Header() {
               href="https://app.posbok.com/createbusiness"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center px-4 py-2 bg-[#6B9B37] text-white text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors"
+              className="inline-flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-[#6B9B37] text-white text-xs md:text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors"
             >
               GET STARTED
             </a>
@@ -363,9 +363,9 @@ export function Header() {
               href="https://app.posbok.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 border border-gray-300 text-gray-800 text-sm font-semibold rounded-full hover:border-[#6B9B37] hover:text-[#6B9B37] transition-colors"
+              className="inline-flex items-center gap-1 md:gap-1.5 px-3 py-1.5 md:px-4 md:py-2 border border-gray-300 text-gray-800 text-xs md:text-sm font-semibold rounded-full hover:border-[#6B9B37] hover:text-[#6B9B37] transition-colors"
             >
-              <LogIn className="w-4 h-4" />
+              <LogIn className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Login
             </a>
 
