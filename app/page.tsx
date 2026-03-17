@@ -22,8 +22,8 @@ const whyFeatures = [
 ]
 
 const accelerators = [
-  { title: "On-Ground Technical Support", desc: "One-time physical setup Per-Shop.", price: "₦25,000", image: "/images/technical-support.jpeg" },
-  { title: "Virtual Staff Training Fee", desc: "3 hours Session for up to 5 staff members.", price: "₦15,000", image: "/images/virtual-training.jpeg" },
+  { title: "On-Ground Technical Support", desc: "One-time physical setup Per-Shop.", price: "₦25,000", image: "/images/Technical-surport.png" },
+  { title: "Virtual Staff Training Fee", desc: "3 hours Session for up to 5 staff members.", price: "₦15,000", image: "/images/virtual_training.png" },
   { title: "Initial Inventory Upload Service", desc: "Upload up to 500 items into your Inventory.", price: "₦10,000", image: "/images/inventory-upload.jpeg" },
   { title: "Barcode Scanner", desc: "High-speed USB Barcode Scanner (New).", price: "₦30,000", image: "/images/scanner.png" },
   { title: "Mobile Thermal Printer", desc: "Portable Bluetooth thermal receipt printer.", price: "₦45,000", image: "/images/thermal-printer.jpeg" },
@@ -96,8 +96,7 @@ export default function HomePage() {
             The All-in-One Platform for Modern Retail
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-8">
-            Automatically Analyse your POS transactions, Inventory linked to an ECommerce
-            for your shop and warehouse operations, seamlessly with POSBOK
+            Automatically record & analyze your Mobile money agent transactions, track your inventory in real time, seamlessly manage your warehouse operations and deploy e-commerce for your shop with POSbOk
           </p>
 
           {/* Hero search */}

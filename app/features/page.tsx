@@ -49,10 +49,10 @@ const features = [
 
 // ── Pricing plans ───────────────────────────────────────────────────────
 const plans = [
-  { name: "POS Services", desc: "All POS Transactions (Withdrawals, Transfers, Deposits, Bill Payments) and Analytics", monthly: "₦500", monthlyValue: 500, annual: "" },
-  { name: "Inventory", desc: "All POS Transactions (Withdrawals, Transfers, Deposits, Bill Payments) and Analytics", monthly: "₦3,500", monthlyValue: 3500, annual: "₦38,000/yr" },
-  { name: "Warehouse", desc: "All POS Transactions (Withdrawals, Transfers, Deposits, Bill Payments) and Analytics", monthly: "₦4,000", monthlyValue: 4000, annual: "₦43,000/yr" },
-  { name: "Storefront", desc: "All POS Transactions (Withdrawals, Transfers, Deposits, Bill Payments) and Analytics", monthly: "₦5,000", monthlyValue: 5000, annual: "₦55,000/yr" },
+  { name: "Mobile Money Operation Management", desc: "POS agent Bookkeeping — All POS Transactions (Withdrawals, Transfers, Deposits, Bill Payments) and Analytics", monthly: "₦3,500", monthlyValue: 3500, annual: "₦38,000/yr" },
+  { name: "Inventory", desc: "Record & Track Sales and Stocks in real time, Manage Stock levels, Multi-shop sales, stock taking, and print receipt wirelessly.", monthly: "₦4,000", monthlyValue: 4000, annual: "₦43,000/yr" },
+  { name: "Warehouse", desc: "Take records of goods as they arrive in bulk into your warehouse or parking house, and easily move to your different shop inventory.", monthly: "₦5,000", monthlyValue: 5000, annual: "₦55,000/yr" },
+  { name: "E-commerce", desc: "Deploy an E-commerce site for your shop with the same inventory items for both online and physical stores linked together.", monthly: "₦5,000", monthlyValue: 5000, annual: "₦55,000/yr" },
 ]
 
 const includedFeatures = [
