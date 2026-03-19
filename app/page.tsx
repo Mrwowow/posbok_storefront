@@ -22,11 +22,11 @@ const whyFeatures = [
 ]
 
 const accelerators = [
-  { title: "On-Ground Technical Support", desc: "One-time physical setup Per-Shop.", price: "₦25,000", image: "/images/Technical-surport.png" },
-  { title: "Virtual Staff Training Fee", desc: "3 hours Session for up to 5 staff members.", price: "₦15,000", image: "/images/virtual_training.png" },
-  { title: "Initial Inventory Upload Service", desc: "Upload up to 500 items into your Inventory.", price: "₦10,000", image: "/images/inventory-upload.jpeg" },
-  { title: "Barcode Scanner", desc: "High-speed USB Barcode Scanner (New).", price: "₦30,000", image: "/images/scanner.png" },
-  { title: "Mobile Thermal Printer", desc: "Portable Bluetooth thermal receipt printer.", price: "₦45,000", image: "/images/thermal-printer.jpeg" },
+  { title: "On-Ground Technical Support", desc: "1 day", price: "₦10,000", image: "/images/Technical-surport.png" },
+  { title: "Virtual Staff Training Fee", desc: "One session", price: "₦8,000", image: "/images/virtual_training.png" },
+  { title: "Stock Data Entry", desc: "Uploads by our team 1-100 SKU's into your Inventory.", price: "₦15,000", image: "/images/inventory-upload.jpeg" },
+  { title: "High-speed USB Barcode Scanner (New)", desc: "Plug and play needs no driver", price: "₦30,000", image: "/images/scanner.png" },
+  { title: "Printer", desc: "Mobile Thermal Printer", price: "₦27,000", image: "/images/thermal-printer.jpeg" },
 ]
 
 const trustedBrands = ["vougue BOUTIQUE", "deep DIVE", "GOLDEN HOUR", "ElegantCursive"]
