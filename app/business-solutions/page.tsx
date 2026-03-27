@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
-import { Check, Shield, Headphones, BarChart3 } from "lucide-react"
+import { Check, Shield, Headphones, BarChart3, Send, Phone, Mail } from "lucide-react"
 
 // ── Solution sections ──────────────────────────────────────────────────
 const solutions = [
@@ -64,8 +64,31 @@ const includedFeatures = [
   { icon: BarChart3, title: "Advanced Analytics", desc: "Comprehensive dashboards and custom reporting tools to drive growth." },
 ]
 
+const businessServices = [
+  "Purchase APIS (Headless ERP)",
+  "Extended Capabilities",
+  "Create a New ERP System",
+  "AI Agents",
+]
+
 export default function BusinessSolutionsPage() {
   const [selectedPlans, setSelectedPlans] = useState<Set<string>>(new Set())
+  const [contactForm, setContactForm] = useState({ name: "", email: "", phone: "", service: "", message: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setContactForm({ ...contactForm, [e.target.name]: e.target.value })
+  }
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    setIsSubmitting(false)
+    setSubmitted(true)
+    setContactForm({ name: "", email: "", phone: "", service: "", message: "" })
+  }
 
   const togglePlan = (planName: string) => {
     setSelectedPlans(prev => {
@@ -256,6 +279,117 @@ export default function BusinessSolutionsPage() {
             <div className="flex justify-center gap-6 mt-4 text-xs text-gray-400">
               <span>Includes all standard features</span>
               <span>Cancel anytime</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CONTACT FOR BUSINESS SOLUTIONS ──────────────────────── */}
+      <section className="bg-[#F8FCF3] py-20 px-4 md:px-8" id="contact">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">Get in Touch</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Contact Us for Business Solutions</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">Tell us about your business needs and our team will get back to you with a tailored solution.</p>
+          </div>
+
+          <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
+            {/* Contact info */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-[#e8f5d5] flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-5 h-5 text-[#6B9B37]" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">Email Us</h3>
+                    <p className="text-gray-500 text-sm">posbokquickresponse@outlook.com</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-[#e8f5d5] flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5 text-[#6B9B37]" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">Call Us</h3>
+                    <p className="text-gray-500 text-sm">07084230597</p>
+                    <p className="text-gray-500 text-sm">+2347084230597</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h3 className="font-semibold text-gray-900 mb-4 text-sm">Our Services</h3>
+                <ul className="space-y-3">
+                  {businessServices.map(service => (
+                    <li key={service} className="flex items-center gap-3 text-sm text-gray-700">
+                      <Check className="w-4 h-4 text-[#6B9B37] flex-shrink-0" strokeWidth={2.5} />
+                      {service}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Contact form */}
+            <div className="lg:col-span-3 bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
+              {submitted ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 rounded-full bg-[#6B9B37] text-white flex items-center justify-center mx-auto mb-4">
+                    <Send className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Message Sent!</h3>
+                  <p className="text-gray-600 mb-4">Thank you for your inquiry. Our team will get back to you within 24 hours.</p>
+                  <button onClick={() => setSubmitted(false)} className="text-[#6B9B37] font-medium hover:underline text-sm">
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="bs-name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                      <input type="text" id="bs-name" name="name" value={contactForm.name} onChange={handleContactChange} required className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-[#6B9B37] transition-colors text-sm" placeholder="Your name" />
+                    </div>
+                    <div>
+                      <label htmlFor="bs-email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                      <input type="email" id="bs-email" name="email" value={contactForm.email} onChange={handleContactChange} required className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-[#6B9B37] transition-colors text-sm" placeholder="your@email.com" />
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="bs-phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                      <input type="tel" id="bs-phone" name="phone" value={contactForm.phone} onChange={handleContactChange} className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-[#6B9B37] transition-colors text-sm" placeholder="+234..." />
+                    </div>
+                    <div>
+                      <label htmlFor="bs-service" className="block text-sm font-medium text-gray-700 mb-1">Service Needed</label>
+                      <select id="bs-service" name="service" value={contactForm.service} onChange={handleContactChange} required className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-[#6B9B37] transition-colors bg-white text-sm">
+                        <option value="">Select a service</option>
+                        {businessServices.map(service => (
+                          <option key={service} value={service}>{service}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="bs-message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                    <textarea id="bs-message" name="message" value={contactForm.message} onChange={handleContactChange} required rows={5} className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:border-[#6B9B37] transition-colors resize-none text-sm" placeholder="Tell us about your business needs..." />
+                  </div>
+                  <button type="submit" disabled={isSubmitting} className="w-full px-6 py-3 bg-[#6B9B37] text-white font-semibold rounded-lg hover:bg-[#4A7A1A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm">
+                    {isSubmitting ? (
+                      <>
+                        <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Send Inquiry
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>

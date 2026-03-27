@@ -78,7 +78,7 @@ export default function HomePage() {
       <Header />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative pt-16 pb-20 px-4 text-center overflow-hidden">
+      <section className="relative pt-16 pb-20 px-4 md:px-8 text-center overflow-hidden">
         {/* Background image */}
         <Image
           src="/images/hero_image.jpg"
@@ -88,7 +88,7 @@ export default function HomePage() {
           className="object-cover"
         />
         {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/75" />
 
         {/* Content */}
         <div className="relative z-10">
@@ -127,7 +127,7 @@ export default function HomePage() {
       </section>
 
       {/* ── TRUSTED BRANDS ─────────────────────────────────────── */}
-      <section className="bg-white py-12 px-4">
+      <section className="bg-white py-12 px-4 md:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
             Over <span className="text-[#6B9B37]">150+</span> Businesses trust Posbok<br /> for their daily operations.
@@ -141,7 +141,7 @@ export default function HomePage() {
       </section>
 
       {/* ── TRACK TRANSACTIONS ────────────────────────────────── */}
-      <section className="bg-[#F8FCF3] py-20 px-4" id="features">
+      <section className="bg-[#F8FCF3] py-20 px-4 md:px-8" id="features">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Track Every Transaction with Confidence</h2>
@@ -156,15 +156,17 @@ export default function HomePage() {
             </ul>
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-4">
+            <p className="text-sm font-semibold text-[#6B9B37] mb-2 text-center">Mobile Money Management</p>
             <Image src="/images/dashboard-preview.png" alt="Dashboard Preview" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
         </div>
       </section>
 
       {/* ── MONITOR SALES ─────────────────────────────────────── */}
-      <section className="bg-white py-20 px-4">
+      <section className="bg-white py-20 px-4 md:px-8">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 bg-gray-50 rounded-2xl shadow-lg p-4">
+            <p className="text-sm font-semibold text-[#6B9B37] mb-2 text-center">Inventory</p>
             <Image src="/images/sales-dashboard.png" alt="Sales Dashboard" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
           <div className="order-1 md:order-2">
@@ -183,7 +185,7 @@ export default function HomePage() {
       </section>
 
       {/* ── INVENTORY ─────────────────────────────────────────── */}
-      <section className="bg-[#F8FCF3] py-20 px-4">
+      <section className="bg-[#F8FCF3] py-20 px-4 md:px-8">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Simple, Organized &amp; Transparent Inventory</h2>
@@ -198,15 +200,18 @@ export default function HomePage() {
             </ul>
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-4">
+            <p className="text-sm font-semibold text-[#6B9B37] mb-1 text-center">Warehouse Management (Parking House)</p>
+            <p className="text-xs text-gray-500 mb-2 text-center">Take records of bulk goods and be able to move to your sales point database</p>
             <Image src="/images/inventory-view.png" alt="Inventory View" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
         </div>
       </section>
 
       {/* ── E-COMMERCE ────────────────────────────────────────── */}
-      <section className="bg-white py-20 px-4">
+      <section className="bg-white py-20 px-4 md:px-8">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 bg-gray-50 rounded-2xl shadow-lg p-4">
+            <p className="text-sm font-semibold text-[#6B9B37] mb-2 text-center">E-commerce</p>
             <Image src="/images/storefront-preview.png" alt="Storefront Preview" width={600} height={400} className="rounded-xl w-full h-auto" />
           </div>
           <div className="order-1 md:order-2">
@@ -225,14 +230,14 @@ export default function HomePage() {
       </section>
 
       {/* ── WHY POSBOK ────────────────────────────────────────── */}
-      <section className="bg-[#F8FCF3] py-20 px-4">
+      <section className="bg-[#F8FCF3] py-20 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">Why Choose Us</p>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Why POSBOK</h2>
             <p className="text-gray-500 max-w-xl mx-auto">The all-in-one platform engineered to solve the toughest operational challenges of modern retail.</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {whyFeatures.map(f => (
               <div key={f.title} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-10 h-10 rounded-full bg-[#e8f5d5] flex items-center justify-center mb-4">
@@ -247,7 +252,7 @@ export default function HomePage() {
       </section>
 
       {/* ── OPERATIONAL ACCELERATORS ──────────────────────────── */}
-      <section className="bg-white py-20 px-4">
+      <section className="bg-white py-20 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">Add-on Package</p>
@@ -274,7 +279,7 @@ export default function HomePage() {
       </section>
 
       {/* ── TESTIMONIAL ───────────────────────────────────────── */}
-      <section className="bg-[#6B9B37] py-20 px-4">
+      <section className="bg-[#6B9B37] py-20 px-4 md:px-8">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-white/80 text-sm font-semibold uppercase tracking-widest mb-4">Customer Response</p>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-12">
@@ -299,7 +304,7 @@ export default function HomePage() {
       </section>
 
       {/* ── MOBILE APP ────────────────────────────────────────── */}
-      <section className="bg-white py-20 px-4">
+      <section className="bg-white py-20 px-4 md:px-8">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Download Our Mobile app</h2>
@@ -335,7 +340,7 @@ export default function HomePage() {
       </section>
 
       {/* ── PRICING ───────────────────────────────────────────── */}
-      <section className="bg-[#F8FCF3] py-20 px-4" id="pricing">
+      <section className="bg-[#F8FCF3] py-20 px-4 md:px-8" id="pricing">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Choose Your Path to Modern Retail.</h2>
@@ -378,7 +383,7 @@ export default function HomePage() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────── */}
-      <section className="bg-white py-20 px-4" id="faq">
+      <section className="bg-white py-20 px-4 md:px-8" id="faq">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#6B9B37] mb-3">FAQ&apos;s</p>
