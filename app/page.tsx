@@ -278,30 +278,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIAL ───────────────────────────────────────── */}
-      <section className="bg-[#6B9B37] py-20 px-4 md:px-8">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-white/80 text-sm font-semibold uppercase tracking-widest mb-4">Customer Response</p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-12">
-            We let our <span className="italic">client&apos;s success</span> be our speaker
-          </h2>
-          <p className="text-white/80 text-sm mb-8">Hear from the businesses scaling their operations and ensuring accuracy with POSBOK.</p>
-          <div className="bg-white rounded-2xl p-8 text-left shadow-lg">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 rounded-full bg-[#e8f5d5] flex items-center justify-center font-bold text-[#6B9B37]">IE</div>
-              <div>
-                <p className="font-semibold text-gray-900">Ighoja E.</p>
-                <p className="text-sm text-gray-500">Operations Manager, Vougue Boutiques</p>
-              </div>
-            </div>
-            <p className="text-gray-600 italic leading-relaxed">
-              &ldquo;Lorem ipsum dolor sit amet consectetur adipiscing elit. Amet consectetur adipiscing elit
-              quisque faucibus ex sapien. Quisque faucibus ex sapien vitae pellentesque sem placerat.
-              Vitae pellentesque sem placerat in id cursus mi.&rdquo;
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* ── MOBILE APP ────────────────────────────────────────── */}
       <section className="bg-white py-20 px-4 md:px-8">
@@ -339,48 +315,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PRICING ───────────────────────────────────────────── */}
-      <section className="bg-[#F8FCF3] py-20 px-4 md:px-8" id="pricing">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Choose Your Path to Modern Retail.</h2>
-            <p className="text-gray-500 max-w-xl mx-auto">POSBOK pricing is designed to be flexible, predictable, and aligned with your daily operations.</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {/* Agency POS */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Agency POS</p>
-              <p className="text-4xl font-bold text-gray-900 mb-1">₦3,000<span className="text-base font-normal text-gray-400">/month</span></p>
-              <p className="text-sm text-gray-500 mb-6">Perfect for POS Agents and Merchants</p>
-              <Link href="#" className="block text-center py-3 border-2 border-[#6B9B37] text-[#6B9B37] font-semibold rounded-full hover:bg-[#6B9B37] hover:text-white transition-colors mb-6 text-sm">GET STARTED</Link>
-              <ul className="space-y-3">
-                {agencyPosFeatures.map(f => (
-                  <li key={f.label} className="flex items-center gap-3 text-sm">
-                    {f.included ? <Check className="w-4 h-4 text-[#6B9B37] flex-shrink-0" strokeWidth={2.5} /> : <X className="w-4 h-4 text-gray-300 flex-shrink-0" strokeWidth={2.5} />}
-                    <span className={f.included ? "text-gray-700" : "text-gray-300"}>{f.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* Full Suite */}
-            <div className="bg-[#6B9B37] rounded-2xl p-8 shadow-lg relative overflow-hidden">
-              <span className="absolute top-4 right-4 bg-white text-[#6B9B37] text-xs font-bold px-3 py-1 rounded-full">BEST VALUE</span>
-              <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-2">Full POSBOK Suite</p>
-              <p className="text-4xl font-bold text-white mb-1">₦5,000<span className="text-base font-normal text-white/70">/month</span></p>
-              <p className="text-sm text-white/80 mb-6">Perfect for Complete Business Operations</p>
-              <Link href="#" className="block text-center py-3 bg-white text-[#6B9B37] font-semibold rounded-full hover:bg-gray-50 transition-colors mb-6 text-sm">GET STARTED</Link>
-              <ul className="space-y-3">
-                {fullSuiteFeatures.map(f => (
-                  <li key={f.label} className="flex items-center gap-3 text-sm">
-                    <Check className="w-4 h-4 text-white flex-shrink-0" strokeWidth={2.5} />
-                    <span className="text-white">{f.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ── FAQ ───────────────────────────────────────────────── */}
       <section className="bg-white py-20 px-4 md:px-8" id="faq">
