@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, X, ChevronDown, Smartphone, ShoppingCart, Warehouse, Globe, Store, ArrowRight, Code, Puzzle, Server, Bot, UserPlus, Settings, Users, CreditCard, Package, Receipt, BarChart3, UserCog, LogIn } from "lucide-react"
+import { Menu, X, ChevronDown, Smartphone, ShoppingCart, Warehouse, Globe, Store, ArrowRight, Code, Puzzle, Server, Bot, UserPlus, Settings, Users, CreditCard, Package, Receipt, BarChart3, UserCog, LogIn, Mail } from "lucide-react"
 
 const featureDropdownItems = [
   {
@@ -45,7 +45,7 @@ const businessSolutionsDropdownItems = [
     icon: Code,
     title: "Purchase APIS (Headless ERP) Customizable",
     desc: "Buy our API's to your private server",
-    href: "/business-solutions",
+    href: "/business-solutions#solutions",
     iconBg: "bg-[#E8F5D5]",
     iconColor: "text-[#6B9B37]",
   },
@@ -53,7 +53,7 @@ const businessSolutionsDropdownItems = [
     icon: Puzzle,
     title: "Extended Capabilities",
     desc: "Build on our existing features tailored for you.",
-    href: "/business-solutions",
+    href: "/business-solutions#solutions",
     iconBg: "bg-[#E0F2E9]",
     iconColor: "text-[#4A9B6E]",
   },
@@ -61,7 +61,7 @@ const businessSolutionsDropdownItems = [
     icon: Server,
     title: "Create New ERP System",
     desc: "Lets solve new ERP related problems for you",
-    href: "/business-solutions",
+    href: "/business-solutions#solutions",
     iconBg: "bg-[#FFF3E0]",
     iconColor: "text-[#C28B3A]",
   },
@@ -69,9 +69,17 @@ const businessSolutionsDropdownItems = [
     icon: Bot,
     title: "AI Agents",
     desc: "Take critical business decision in your absence.",
-    href: "/business-solutions",
+    href: "/business-solutions#solutions",
     iconBg: "bg-[#E8F5D5]",
     iconColor: "text-[#6B9B37]",
+  },
+  {
+    icon: Mail,
+    title: "Contact for Business Solutions",
+    desc: "Get in touch with our team for a tailored solution.",
+    href: "/business-solutions#contact",
+    iconBg: "bg-[#FDEAE8]",
+    iconColor: "text-[#C27A6E]",
   },
 ]
 
@@ -192,7 +200,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6 lg:space-x-8">
             {/* Features with dropdown */}
             <div ref={dropdownRef} className="relative">
               <button
@@ -353,7 +361,7 @@ export function Header() {
               href="https://app.posbok.com/createbusiness"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-[#6B9B37] text-white text-xs md:text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors"
+              className="inline-flex items-center px-3 py-1.5 lg:px-4 lg:py-2 bg-[#6B9B37] text-white text-xs lg:text-sm font-semibold rounded-full hover:bg-[#4A7A1A] transition-colors"
             >
               GET STARTED
             </a>
@@ -363,15 +371,15 @@ export function Header() {
               href="https://app.posbok.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 md:gap-1.5 px-3 py-1.5 md:px-4 md:py-2 border border-gray-300 text-gray-800 text-xs md:text-sm font-semibold rounded-full hover:border-[#6B9B37] hover:text-[#6B9B37] transition-colors"
+              className="inline-flex items-center gap-1 lg:gap-1.5 px-3 py-1.5 lg:px-4 lg:py-2 border border-gray-300 text-gray-800 text-xs lg:text-sm font-semibold rounded-full hover:border-[#6B9B37] hover:text-[#6B9B37] transition-colors"
             >
-              <LogIn className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <LogIn className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
               Login
             </a>
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-gray-800 hover:text-[#6B9B37] transition-colors"
+              className="lg:hidden p-2 text-gray-800 hover:text-[#6B9B37] transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -386,7 +394,7 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-100">
+          <nav className="lg:hidden py-4 border-t border-gray-100">
             <div className="flex flex-col space-y-1">
               {/* Features with collapsible sub-items */}
               <button
