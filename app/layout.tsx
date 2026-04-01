@@ -6,7 +6,7 @@ import { CartProvider } from '@/contexts/CartContext'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'POSBOK Storefront',
+  title: 'POSBOK',
   description: 'Your local marketplace for quality products',
   icons: {
     icon: '/logo-mini.png',
