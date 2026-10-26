@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Image from "next/image"
+import { PRODUCT_PLACEHOLDER_IMAGE, handleProductImageError } from "@/lib/placeholder"
 import Link from "next/link"
 import { storeApi, Store, Category, PurchaseRequestData } from "@/lib/api"
 import { useCart } from "@/contexts/CartContext"
@@ -382,7 +383,7 @@ export default function CartPage() {
                 {cartItems.map((item) => {
                   const productImage = item.product.images?.find(img => img.is_primary)?.image_url
                     || item.product.images?.[0]?.image_url
-                    || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop"
+                    || PRODUCT_PLACEHOLDER_IMAGE
                   const itemTotal = item.quantity * item.price
 
                   return (
@@ -397,6 +398,7 @@ export default function CartPage() {
                           alt={item.product.name}
                           fill
                           className="object-cover"
+                          onError={handleProductImageError}
                         />
                       </div>
 

@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/CartContext"
 import { SearchBar } from "@/components/SearchBar"
 import { StoreFooter } from "@/components/StoreFooter"
 import { ShoppingCart, Menu, X, MapPin, Loader2, ChevronDown, SearchX, Package, Plus, CheckCircle } from "lucide-react"
+import { PRODUCT_PLACEHOLDER_IMAGE, handleProductImageError } from "@/lib/placeholder"
 
 function StoreHeader({ store, storeSlug, onLogoClick }: { store: Store | null; storeSlug: string; onLogoClick?: () => void }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -129,7 +130,7 @@ function ProductCard({ product, storeSlug }: { product: Product; storeSlug: stri
   }
 
   const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0]
-  const imageUrl = primaryImage?.image_url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop"
+  const imageUrl = primaryImage?.image_url || PRODUCT_PLACEHOLDER_IMAGE
 
   const discount = product.supposed_price && product.supposed_price > product.selling_price
     ? Math.round(((product.supposed_price - product.selling_price) / product.supposed_price) * 100)
@@ -161,6 +162,7 @@ function ProductCard({ product, storeSlug }: { product: Product; storeSlug: stri
           fill
           className="object-cover"
           sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          onError={handleProductImageError}
         />
         {/* In Stock Badge */}
         <div
@@ -307,6 +309,8 @@ export default function StorePage() {
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
+  // Category chips stay collapsed on load; tapping "All Categories" expands/collapses them.
+  const [showAllCategories, setShowAllCategories] = useState(false)
 
   const { setStoreSlug } = useCart()
 
@@ -465,19 +469,27 @@ export default function StorePage() {
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
             <button
-              onClick={handleResetFilters}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+              onClick={() => {
+                handleResetFilters()
+                setShowAllCategories((prev) => !prev)
+              }}
+              aria-expanded={showAllCategories}
+              className={`inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                 selectedCategoryId === null && !searchQuery
                   ? "bg-[#6B9B37] text-white border-[#6B9B37]"
                   : "bg-white text-gray-600 border-gray-200 hover:border-[#6B9B37] hover:text-[#6B9B37]"
               }`}
             >
               All Categories
+              <ChevronDown className={`w-4 h-4 transition-transform ${showAllCategories ? "rotate-180" : ""}`} />
             </button>
-            {categories.map((cat) => (
+            {(showAllCategories
+              ? categories
+              : categories.filter((cat) => cat.id === selectedCategoryId)
+            ).map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => { setSelectedCategoryId(cat.id); setSearchQuery("") }}
+                onClick={() => { setSelectedCategoryId(cat.id); setSearchQuery(""); setShowAllCategories(false) }}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                   selectedCategoryId === cat.id
                     ? "bg-[#6B9B37] text-white border-[#6B9B37]"

@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { PRODUCT_PLACEHOLDER_IMAGE, handleProductImageError } from "@/lib/placeholder"
 import Link from "next/link"
 import { Star } from "lucide-react"
 
@@ -67,11 +68,12 @@ export function ProductCard({
       {/* Image Container */}
       <div className="relative aspect-square bg-gray-100">
         <Image
-          src={image}
+          src={image || PRODUCT_PLACEHOLDER_IMAGE}
           alt={name}
           fill
           className="object-cover"
           sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          onError={handleProductImageError}
         />
         {/* Delivery Badge */}
         <div
