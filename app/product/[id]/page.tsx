@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { ImageCarousel } from "@/components/ImageCarousel"
+import { PRODUCT_PLACEHOLDER_IMAGE } from "@/lib/placeholder"
 import { useCart } from "@/contexts/CartContext"
 import { useReviews } from "@/hooks/useReviews"
 import { SubmitReviewData } from "@/lib/api"
@@ -21,10 +22,7 @@ const products = [
     originalPrice: 6000,
     discount: 10,
     images: [
-      { id: 1, image_url: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop", is_primary: true },
-      { id: 2, image_url: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&h=800&fit=crop", is_primary: false },
-      { id: 3, image_url: "https://images.unsplash.com/photo-1586816879360-004f5b0c51e5?w=800&h=800&fit=crop", is_primary: false },
-      { id: 4, image_url: "https://images.unsplash.com/photo-1613141411244-0e4ac259d217?w=800&h=800&fit=crop", is_primary: false },
+      { id: 1, image_url: PRODUCT_PLACEHOLDER_IMAGE, is_primary: true },
     ],
     rating: 4.5,
     reviewCount: 124,
@@ -48,8 +46,7 @@ const products = [
     name: "Oraimo Wireless Mouse + Mouse Pad",
     price: 7500,
     images: [
-      { id: 1, image_url: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&h=800&fit=crop", is_primary: true },
-      { id: 2, image_url: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop", is_primary: false },
+      { id: 1, image_url: PRODUCT_PLACEHOLDER_IMAGE, is_primary: true },
     ],
     rating: 5,
     reviewCount: 89,

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import { PRODUCT_PLACEHOLDER_IMAGE, handleProductImageError } from "@/lib/placeholder"
 import Link from "next/link"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
@@ -138,10 +139,11 @@ export default function CartPage() {
                     {/* Product Image */}
                     <div className="relative w-full sm:w-24 h-40 sm:h-24 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                       <Image
-                        src={item.product_image || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop"}
+                        src={item.product_image || PRODUCT_PLACEHOLDER_IMAGE}
                         alt={item.product_name}
                         fill
                         className="object-cover"
+                        onError={handleProductImageError}
                       />
                     </div>
 

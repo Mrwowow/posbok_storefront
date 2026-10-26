@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
+import { PRODUCT_PLACEHOLDER_IMAGE, handleProductImageError } from "@/lib/placeholder"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { allProductsApi, AllProductsItem } from "@/lib/api"
@@ -42,19 +43,14 @@ function StorefrontProductCard({ product }: { product: AllProductsItem }) {
     >
       {/* Image */}
       <div className="relative aspect-square bg-gray-100">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-            <Store className="w-10 h-10 text-gray-300" />
-          </div>
-        )}
+        <Image
+          src={imageUrl || PRODUCT_PLACEHOLDER_IMAGE}
+          alt={product.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+          onError={handleProductImageError}
+        />
 
         {/* Stock badge */}
         <div className={`absolute top-2 left-2 px-2 py-0.5 text-[10px] font-medium rounded ${product.in_stock ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"}`}>

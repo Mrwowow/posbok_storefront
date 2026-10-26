@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { PRODUCT_PLACEHOLDER_IMAGE, handleProductImageError } from "@/lib/placeholder"
 
 export interface CarouselImage {
   id?: number
@@ -22,10 +23,11 @@ interface ImageCarouselProps {
 export function ImageCarousel({ images, productName, badge }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // If no images provided, use a placeholder
-  const displayImages = images.length > 0
-    ? images
-    : [{ image_url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=800&fit=crop" }]
+  // If no images provided, use the POSbok placeholder
+  const validImages = (images || []).filter((img) => !!img?.image_url)
+  const displayImages: CarouselImage[] = validImages.length > 0
+    ? validImages
+    : [{ image_url: PRODUCT_PLACEHOLDER_IMAGE }]
 
   const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1))
@@ -55,6 +57,7 @@ export function ImageCarousel({ images, productName, badge }: ImageCarouselProps
           fill
           className="object-cover transition-transform duration-300"
           priority
+          onError={handleProductImageError}
         />
 
         {/* Badge */}
@@ -121,6 +124,7 @@ export function ImageCarousel({ images, productName, badge }: ImageCarouselProps
                 alt={`${productName} thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
+                onError={handleProductImageError}
               />
             </button>
           ))}

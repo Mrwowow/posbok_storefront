@@ -10,6 +10,7 @@ import { useReviews } from "@/hooks/useReviews"
 import { SubmitReviewData } from "@/lib/api"
 import { StoreFooter } from "@/components/StoreFooter"
 import { ImageCarousel } from "@/components/ImageCarousel"
+import { PRODUCT_PLACEHOLDER_IMAGE } from "@/lib/placeholder"
 import { Star, Truck, Shield, ChevronLeft, Minus, Plus, ShoppingCart, Heart, Share2, MapPin, ThumbsUp, Loader2, CheckCircle, Menu, X } from "lucide-react"
 
 function StoreHeader({ store, storeSlug }: { store: Store | null; storeSlug: string }) {
@@ -335,7 +336,7 @@ export default function ProductDetailPage() {
 
   // Get the primary image or first image from the images array
   const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0]
-  const imageUrl = primaryImage?.image_url || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=800&fit=crop"
+  const imageUrl = primaryImage?.image_url || PRODUCT_PLACEHOLDER_IMAGE
 
   // Calculate discount if supposed_price exists and is higher than selling_price
   const discount = product.supposed_price && product.supposed_price > product.selling_price
